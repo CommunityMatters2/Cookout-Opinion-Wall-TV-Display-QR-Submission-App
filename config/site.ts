@@ -18,6 +18,8 @@ export const siteConfig = {
     orgName: "Community Matters 2, Inc.",
     logo: "/cm2/logo.png",
     heroPhoto: "/cm2/hero-cookout.jpg",
+    muralPhoto: "/cm2/mural.jpg",
+    activityPhoto: "/cm2/photo-gokart.jpg",
     mission: "Every Child Should Have A Chance To Have A Chance",
     surveyIntroTitle: "Help Us Build Poughkeepsie's Next Community Center",
     surveyIntroBody:

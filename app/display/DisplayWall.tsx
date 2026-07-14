@@ -1,14 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import type { Message } from "@/types/message";
 import { siteConfig } from "@/config/site";
-import QrCorner from "@/app/display/QrCorner";
+import Sidebar from "@/app/display/Sidebar";
 import styles from "./display.module.css";
 
 const MAX_CARDS = 24;
+
+type PromoTile =
+  | { kind: "photo"; src: string; caption: string }
+  | { kind: "stat"; value: string; label: string };
+
+type GridItem =
+  | { kind: "message"; message: Message }
+  | { kind: "promo"; promo: PromoTile };
 
 export default function DisplayWall({
   initialMessages,
@@ -17,6 +25,26 @@ export default function DisplayWall({
 }) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const { cm2 } = siteConfig;
+
+  const promoTiles: PromoTile[] = useMemo(
+    () => [
+      { kind: "photo", src: cm2.activityPhoto, caption: "CM2 youth programming in action" },
+      { kind: "stat", value: "$1 → $3–$12", label: "saved for every dollar invested in youth programming" },
+      { kind: "photo", src: cm2.muralPhoto, caption: "Our mural on N. Hamilton St, Poughkeepsie" },
+    ],
+    [cm2.activityPhoto, cm2.muralPhoto]
+  );
+
+  const gridItems: GridItem[] = useMemo(() => {
+    const items: GridItem[] = [{ kind: "promo", promo: promoTiles[0] }];
+    messages.forEach((m, i) => {
+      items.push({ kind: "message", message: m });
+      if ((i + 1) % 6 === 0) {
+        items.push({ kind: "promo", promo: promoTiles[(Math.floor((i + 1) / 6)) % promoTiles.length] });
+      }
+    });
+    return items;
+  }, [messages, promoTiles]);
 
   useEffect(() => {
     const supabase = createBrowserSupabaseClient();
@@ -51,41 +79,47 @@ export default function DisplayWall({
         </div>
       </div>
 
-      <header className={styles.header}>
-        <Image src={cm2.logo} alt={cm2.orgName} width={64} height={64} className={styles.headerLogo} />
-        <div>
-          <h1 className={styles.title}>{siteConfig.eventTitle}</h1>
-          <p className={styles.tagline}>{siteConfig.tagline}</p>
-        </div>
-      </header>
+      <div className={styles.body}>
+        <main className={styles.main}>
+          <header className={styles.header}>
+            <Image src={cm2.logo} alt={cm2.orgName} width={64} height={64} className={styles.headerLogo} />
+            <div>
+              <h1 className={styles.title}>{siteConfig.eventTitle}</h1>
+              <p className={styles.tagline}>{siteConfig.tagline}</p>
+            </div>
+          </header>
 
-      {messages.length === 0 ? (
-        <div className={styles.empty}>
-          <p>Be the first to share your opinion! 👀</p>
-        </div>
-      ) : (
-        <div className={styles.grid}>
-          {messages.map((m) => (
-            <article key={m.id} className={styles.card}>
-              <p className={styles.message}>&ldquo;{m.message}&rdquo;</p>
-              <p className={styles.name}>— {m.name}</p>
-            </article>
-          ))}
-        </div>
-      )}
+          {messages.length === 0 && (
+            <p className={styles.emptyHint}>Be the first to share your opinion! 👀</p>
+          )}
 
-      <footer className={styles.footer}>
-        <Image src={cm2.logo} alt={cm2.orgName} width={40} height={40} className={styles.footerLogo} />
-        <span className={styles.footerOrg}>{cm2.orgName}</span>
-        <span className={styles.footerDivider}>•</span>
-        <span>{cm2.website}</span>
-        <span className={styles.footerDivider}>•</span>
-        <span>{cm2.address}</span>
-        <span className={styles.footerDivider}>•</span>
-        <span>{cm2.phone}</span>
-      </footer>
+          <div className={styles.grid}>
+            {gridItems.map((item, i) =>
+              item.kind === "message" ? (
+                <article key={item.message.id} className={styles.card}>
+                  <p className={styles.message}>&ldquo;{item.message.message}&rdquo;</p>
+                  <p className={styles.name}>— {item.message.name}</p>
+                </article>
+              ) : item.promo.kind === "photo" ? (
+                <div
+                  key={`promo-${i}`}
+                  className={styles.promoPhotoTile}
+                  style={{ backgroundImage: `url(${item.promo.src})` }}
+                >
+                  <p className={styles.promoPhotoCaption}>{item.promo.caption}</p>
+                </div>
+              ) : (
+                <div key={`promo-${i}`} className={styles.promoStatTile}>
+                  <span className={styles.promoStatValue}>{item.promo.value}</span>
+                  <span className={styles.promoStatLabel}>{item.promo.label}</span>
+                </div>
+              )
+            )}
+          </div>
+        </main>
 
-      <QrCorner />
+        <Sidebar />
+      </div>
     </div>
   );
 }

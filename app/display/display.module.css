@@ -1,10 +1,8 @@
 .page {
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
-  padding: 0 0 56px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
   position: relative;
   overflow: hidden;
 }
@@ -13,11 +11,25 @@
   content: "";
   position: fixed;
   inset: 0;
+  z-index: -2;
+  background-image: url("/cm2/hero-cookout.jpg");
+  background-size: cover;
+  background-position: center 30%;
+  filter: blur(18px) brightness(0.9);
+  transform: scale(1.1);
+  opacity: 0.16;
+}
+
+.page::after {
+  content: "";
+  position: fixed;
+  inset: 0;
   z-index: -1;
   background:
-    radial-gradient(circle at 90% -8%, rgba(255, 107, 53, 0.16), transparent 40%),
-    radial-gradient(circle at 6% 15%, rgba(30, 159, 179, 0.14), transparent 35%),
-    radial-gradient(circle at 50% 105%, rgba(67, 167, 91, 0.12), transparent 40%);
+    radial-gradient(circle at 92% -6%, rgba(255, 107, 53, 0.22), transparent 40%),
+    radial-gradient(circle at 4% 20%, rgba(30, 159, 179, 0.18), transparent 35%),
+    radial-gradient(circle at 40% 100%, rgba(67, 167, 91, 0.16), transparent 45%),
+    linear-gradient(180deg, var(--color-background), var(--color-background));
 }
 
 /* CM2 promo ticker */
@@ -28,6 +40,7 @@
   background: var(--color-cm2-navy);
   padding: 12px 0;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
 }
 
 .marqueeTrack {
@@ -38,7 +51,7 @@
 
 .marqueeContent {
   color: var(--color-cm2-gold);
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 600;
   white-space: nowrap;
   padding-right: 12px;
@@ -57,13 +70,43 @@
   }
 }
 
+/* Body: message wall + CM2 sidebar */
+
+.body {
+  flex: 1;
+  display: flex;
+  gap: 28px;
+  padding: 24px 32px 28px;
+  min-height: 0;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+}
+
+.main::before {
+  content: "";
+  position: absolute;
+  inset: 90px 0 0;
+  background-image: url("/cm2/logo.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: min(50%, 420px);
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: -1;
+}
+
 .header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
-  text-align: left;
-  padding: 8px 56px 0;
+  gap: 18px;
 }
 
 .headerLogo {
@@ -73,39 +116,39 @@
 }
 
 .title {
-  font-size: 3.4rem;
+  font-size: 2.6rem;
   font-weight: 800;
   color: var(--color-accent);
+  line-height: 1.1;
 }
 
 .tagline {
-  font-size: 1.6rem;
+  font-size: 1.25rem;
   opacity: 0.85;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
-.empty {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
+.emptyHint {
+  font-size: 1.3rem;
   opacity: 0.6;
 }
 
 .grid {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
-  align-content: start;
-  padding: 0 56px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-auto-rows: min-content;
+  gap: 20px;
+  align-content: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
 }
 
 .card {
   background: var(--color-card);
   border-radius: 18px;
-  padding: 22px 24px;
+  padding: 20px 22px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
   animation: cardIn 0.4s ease-out;
   border-top: 6px solid var(--color-accent);
@@ -132,16 +175,16 @@
 }
 
 .message {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   line-height: 1.4;
   word-break: break-word;
 }
 
 .name {
-  margin-top: 12px;
+  margin-top: 10px;
   font-weight: 700;
   color: var(--color-accent);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
 }
 
 @keyframes cardIn {
@@ -155,52 +198,190 @@
   }
 }
 
-/* CM2 footer strip */
-
-.footer {
-  margin-top: auto;
-  padding: 14px 56px 0;
+.promoPhotoTile {
+  border-radius: 18px;
+  background-size: cover;
+  background-position: center 38%;
   display: flex;
+  align-items: flex-end;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  min-height: 200px;
+  border: 3px solid var(--color-cm2-gold);
+}
+
+.promoPhotoCaption {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 0 0 15px 15px;
+  background: linear-gradient(0deg, rgba(11, 34, 57, 0.88), transparent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+.promoStatTile {
+  border-radius: 18px;
+  background: var(--color-cm2-navy);
+  border: 3px solid var(--color-cm2-gold);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
   gap: 10px;
-  font-size: 0.95rem;
-  opacity: 0.75;
-}
-
-.footerLogo {
-  border-radius: 50%;
-}
-
-.footerOrg {
-  font-weight: 700;
-}
-
-.footerDivider {
-  opacity: 0.4;
-}
-
-.qrCorner {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: var(--color-card);
-  border-radius: 16px;
-  padding: 14px 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
   text-align: center;
+  padding: 20px;
+}
+
+.promoStatValue {
+  color: var(--color-cm2-gold);
+  font-weight: 800;
+  font-size: 1.8rem;
+}
+
+.promoStatLabel {
+  color: #fff;
+  font-size: 1rem;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+/* CM2 sidebar */
+
+.sidebar {
+  width: 340px;
+  flex-shrink: 0;
+  background: var(--color-card);
+  border-radius: 22px;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.12);
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebarBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebarLogo {
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sidebarOrgName {
+  font-weight: 800;
+  font-size: 1.1rem;
+  line-height: 1.25;
+}
+
+.sidebarPhoto {
+  height: 140px;
+  border-radius: 14px;
+  background-size: cover;
+  background-position: center;
+}
+
+.sidebarMission {
+  font-style: italic;
+  font-size: 1.05rem;
+  text-align: center;
+  opacity: 0.85;
+  padding: 0 4px;
+}
+
+.impactCard {
+  background: var(--color-cm2-navy);
+  border-radius: 14px;
+  padding: 14px 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.impactNumber {
+  color: var(--color-cm2-gold);
+  font-weight: 800;
+  font-size: 1.4rem;
+}
+
+.impactLabel {
+  color: #fff;
+  font-size: 0.82rem;
+  opacity: 0.9;
+  line-height: 1.3;
+}
+
+.sidebarPhotoSmall {
+  height: 110px;
+  border-radius: 14px;
+  background-size: cover;
+  background-position: center;
+}
+
+.sidebarCaption {
+  font-size: 0.78rem;
+  opacity: 0.55;
+  text-align: center;
+  margin-top: -8px;
+}
+
+.qrBlock {
+  background: #fffefb;
   border: 3px solid var(--color-accent);
+  border-radius: 16px;
+  padding: 14px;
+  text-align: center;
 }
 
 .qrBox {
   display: flex;
   justify-content: center;
+  margin-bottom: 8px;
 }
 
 .qrLabel {
-  margin-top: 8px;
   font-size: 0.85rem;
   font-weight: 600;
-  max-width: 160px;
+}
+
+.sidebarSocial {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.socialPill {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #fff;
+}
+
+.socialPill:nth-child(1) {
+  background: #1877f2;
+}
+
+.socialPill:nth-child(2) {
+  background: #c13584;
+}
+
+.socialPill:nth-child(3) {
+  background: #111;
+}
+
+.sidebarWebsite {
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  opacity: 0.6;
 }
