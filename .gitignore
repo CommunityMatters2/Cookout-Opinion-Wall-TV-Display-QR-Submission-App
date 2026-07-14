@@ -37,6 +37,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# raw CM2 source presentations (huge, not meant to be deployed — optimized assets pulled from these live in public/cm2)
+/public/CM2 Content/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

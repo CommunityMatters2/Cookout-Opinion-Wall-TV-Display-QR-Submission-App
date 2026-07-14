@@ -1,5 +1,5 @@
-import SubmitForm from "@/app/SubmitForm";
+import SurveyFlow from "@/app/SurveyFlow";
 
 export default function Home() {
-  return <SubmitForm />;
+  return <SurveyFlow />;
 }

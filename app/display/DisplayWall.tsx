@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import type { Message } from "@/types/message";
 import { siteConfig } from "@/config/site";
@@ -15,6 +16,7 @@ export default function DisplayWall({
   initialMessages: Message[];
 }) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const { cm2 } = siteConfig;
 
   useEffect(() => {
     const supabase = createBrowserSupabaseClient();
@@ -38,9 +40,23 @@ export default function DisplayWall({
 
   return (
     <div className={styles.page}>
+      <div className={styles.marquee}>
+        <div className={styles.marqueeTrack}>
+          {Array.from({ length: 3 }).map((_, i) => (
+            <span key={i} className={styles.marqueeContent}>
+              <strong>{cm2.orgName}</strong> — &ldquo;{cm2.mission}&rdquo; &nbsp;•&nbsp; {cm2.impactFact}
+              &nbsp;•&nbsp; Scan the QR to help shape Poughkeepsie&rsquo;s next community center &nbsp;•&nbsp;
+            </span>
+          ))}
+        </div>
+      </div>
+
       <header className={styles.header}>
-        <h1 className={styles.title}>{siteConfig.eventTitle}</h1>
-        <p className={styles.tagline}>{siteConfig.tagline}</p>
+        <Image src={cm2.logo} alt={cm2.orgName} width={64} height={64} className={styles.headerLogo} />
+        <div>
+          <h1 className={styles.title}>{siteConfig.eventTitle}</h1>
+          <p className={styles.tagline}>{siteConfig.tagline}</p>
+        </div>
       </header>
 
       {messages.length === 0 ? (
@@ -57,6 +73,17 @@ export default function DisplayWall({
           ))}
         </div>
       )}
+
+      <footer className={styles.footer}>
+        <Image src={cm2.logo} alt={cm2.orgName} width={40} height={40} className={styles.footerLogo} />
+        <span className={styles.footerOrg}>{cm2.orgName}</span>
+        <span className={styles.footerDivider}>•</span>
+        <span>{cm2.website}</span>
+        <span className={styles.footerDivider}>•</span>
+        <span>{cm2.address}</span>
+        <span className={styles.footerDivider}>•</span>
+        <span>{cm2.phone}</span>
+      </footer>
 
       <QrCorner />
     </div>

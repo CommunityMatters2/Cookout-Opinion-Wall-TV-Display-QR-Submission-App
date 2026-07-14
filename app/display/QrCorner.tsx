@@ -11,7 +11,7 @@ export default function QrCorner() {
       <div className={styles.qrBox}>
         <QRCodeSVG value={submitUrl} size={120} />
       </div>
-      <p className={styles.qrLabel}>Scan to share your opinion!</p>
+      <p className={styles.qrLabel}>Scan to join in — answer a few questions &amp; share your opinion!</p>
     </div>
   );
 }

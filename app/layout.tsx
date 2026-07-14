@@ -18,7 +18,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { colors } = siteConfig;
+  const { colors, cm2 } = siteConfig;
   return (
     <html
       lang="en"
@@ -29,6 +29,11 @@ export default function RootLayout({
           "--color-accent": colors.accent,
           "--color-text": colors.text,
           "--color-card": colors.cardBackground,
+          "--color-cm2-teal": cm2.palette.teal,
+          "--color-cm2-green": cm2.palette.green,
+          "--color-cm2-purple": cm2.palette.purple,
+          "--color-cm2-gold": cm2.palette.gold,
+          "--color-cm2-navy": cm2.palette.navy,
         } as React.CSSProperties
       }
     >
