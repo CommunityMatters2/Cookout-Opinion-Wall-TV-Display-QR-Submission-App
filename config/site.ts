@@ -18,8 +18,6 @@ export const siteConfig = {
     orgName: "Community Matters 2, Inc.",
     logo: "/cm2/logo.png",
     heroPhoto: "/cm2/hero-cookout.jpg",
-    muralPhoto: "/cm2/mural.jpg",
-    activityPhoto: "/cm2/photo-gokart.jpg",
     mission: "Every Child Should Have A Chance To Have A Chance",
     surveyIntroTitle: "Help Us Build Poughkeepsie's Next Community Center",
     surveyIntroBody:
@@ -42,5 +40,21 @@ export const siteConfig = {
       gold: "#F5A623",
       navy: "#0B2239",
     },
+    // Verified stats from CM2's "Impact By The Numbers" deck — shown on the display wall.
+    stats: [
+      { value: "1,000+", label: "Youth Served" },
+      { value: "10,000", label: "Meals Delivered" },
+      { value: "$350K+", label: "Youth Employment Invested" },
+      { value: "70+", label: "Collaborations & Partnerships" },
+    ],
+    // Rotating hype lines for the display wall's animated text panel.
+    hypeLines: [
+      { headline: "Every voice makes Poughkeepsie stronger.", sub: "Thank you for showing up tonight. 💪" },
+      { headline: "300+ neighbors. One community.", sub: "Your opinion is shaping what comes next." },
+      { headline: "Every Child Should Have A Chance To Have A Chance.", sub: "— L'Quette Taylor, Founder & CEO" },
+      { headline: "$1 invested in youth saves $3–$12 down the road.", sub: "That's the power of showing up for kids." },
+      { headline: "You're helping build Poughkeepsie's next Community Center.", sub: "Scan. Share. Shape the future." },
+      { headline: "1,000+ youth served and counting.", sub: "Let's keep that number growing. 🌟" },
+    ],
   },
 };
