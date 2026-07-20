@@ -70,24 +70,63 @@
   }
 }
 
-/* Three-column body */
+/* Broadcast body: hero photo strip on top, live wall + broadcast panel below */
 
-.columns {
+.broadcast {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 22px 22px;
+  transition: opacity 0.6s ease;
+}
+
+.broadcastHidden {
+  opacity: 0;
+}
+
+.heroStrip {
+  flex: 0 0 38%;
+  min-height: 220px;
+  position: relative;
+}
+
+.lowerGrid {
   flex: 1;
   min-height: 0;
   display: flex;
   gap: 20px;
-  padding: 18px 22px 22px;
 }
 
-/* Left: photo slideshow */
+/* Full-screen Community Voice takeover */
+
+.takeoverLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 64px;
+  background: linear-gradient(160deg, var(--color-cm2-navy), #123354 60%, var(--color-cm2-teal));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+.takeoverActive {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Hero photo strip (landscape-friendly, full width) */
 
 .slideshow {
   position: relative;
-  flex: 0 0 29%;
-  min-width: 280px;
+  width: 100%;
   height: 100%;
-  border-radius: 22px;
+  border-radius: 24px;
   overflow: hidden;
   background: linear-gradient(160deg, var(--color-cm2-navy), var(--color-cm2-teal));
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
@@ -96,8 +135,7 @@
 .slide {
   position: absolute;
   inset: 0;
-  background-size: contain;
-  background-repeat: no-repeat;
+  background-size: cover;
   background-position: center;
   opacity: 0;
   transform: scale(1);
@@ -174,15 +212,15 @@
   flex-shrink: 0;
 }
 
-/* Middle: live opinions feed */
+/* Live feed wall */
 
 .feedColumn {
-  flex: 1;
+  flex: 1.9;
   min-width: 360px;
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   background: rgba(255, 255, 255, 0.6);
   border-radius: 22px;
   padding: 20px 22px;
@@ -242,6 +280,71 @@
   opacity: 0.6;
 }
 
+/* Spotlight callout */
+
+.spotlightCard {
+  flex-shrink: 0;
+  background: linear-gradient(120deg, var(--color-cm2-navy), #1c3f63);
+  border-radius: 18px;
+  padding: 14px 18px;
+  box-shadow: 0 10px 24px rgba(11, 34, 57, 0.28);
+  animation: spotlightIn 0.5s ease both;
+}
+
+@keyframes spotlightIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.spotlightBadge {
+  display: inline-block;
+  color: var(--color-cm2-gold);
+  font-weight: 800;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.spotlightBody {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.spotlightAvatar {
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-cm2-gold), var(--color-accent));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.15rem;
+}
+
+.spotlightName {
+  color: var(--color-cm2-gold);
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+}
+
+.spotlightMessage {
+  color: #fff;
+  font-size: 1.15rem;
+  line-height: 1.4;
+}
+
 .feedViewport {
   flex: 1;
   min-height: 0;
@@ -264,19 +367,50 @@
 .feedTrack {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   will-change: transform;
 }
 
 .feedCard {
+  position: relative;
   display: flex;
   gap: 12px;
   align-items: flex-start;
   background: #fffefb;
-  border-radius: 14px;
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
   padding: 12px 16px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
+}
+
+.feedCardTiltA {
+  transform: rotate(-0.6deg);
+}
+
+.feedCardTiltB {
+  transform: rotate(0.6deg);
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 4px;
+}
+
+.feedCardNew {
+  padding-right: 56px;
+  box-shadow: 0 0 0 2px var(--color-cm2-gold), 0 6px 18px rgba(245, 166, 35, 0.35);
+}
+
+.feedNewRibbon {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: var(--color-cm2-gold);
+  color: var(--color-cm2-navy);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .feedAvatar {
@@ -291,6 +425,7 @@
   justify-content: center;
   font-weight: 800;
   font-size: 1rem;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.6);
 }
 
 .feedTrack .feedCard:nth-child(5n + 2) .feedAvatar {
@@ -326,27 +461,27 @@
   word-break: break-word;
 }
 
-/* Right: CM2 info panel */
+/* Broadcast side panel (rotating scenes + pinned QR/social footer) */
 
-.infoPanel {
-  flex: 0 0 27%;
+.broadcastPanel {
+  flex: 1;
   min-width: 300px;
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   background: var(--color-card);
   border-radius: 22px;
-  padding: 22px 20px;
+  padding: 20px 20px 18px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .infoBrand {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .infoLogo {
@@ -356,9 +491,70 @@
 
 .infoOrgName {
   font-weight: 800;
-  font-size: 1.05rem;
+  font-size: 1rem;
   line-height: 1.25;
 }
+
+.sceneStage {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: sceneIn 0.5s ease both;
+}
+
+@keyframes sceneIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sceneKicker {
+  color: var(--color-accent);
+  font-weight: 800;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.sceneKickerSecondary {
+  color: var(--color-cm2-teal);
+  font-weight: 800;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 14px 0 8px;
+}
+
+.sceneDots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sceneDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(43, 29, 14, 0.2);
+  transition: all 0.3s;
+}
+
+.sceneDotActive {
+  background: var(--color-accent);
+  width: 18px;
+}
+
+/* Hype scene */
 
 .hypeBlock {
   background: linear-gradient(135deg, var(--color-cm2-navy), #123354);
@@ -368,89 +564,324 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  min-height: 150px;
+  min-height: 120px;
   justify-content: center;
-}
-
-.hypeAnimated {
-  animation: hypeIn 0.6s ease both;
-}
-
-@keyframes hypeIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  margin: auto 0;
+  flex-shrink: 0;
 }
 
 .hypeHeadline {
   color: #fff;
   font-weight: 800;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   line-height: 1.35;
 }
 
 .hypeSub {
   color: var(--color-cm2-gold);
   font-weight: 600;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
 }
 
-.hypeDots {
+/* Impact Dashboard scene */
+
+.sceneImpact {
   display: flex;
-  gap: 6px;
-  justify-content: center;
-  margin-top: 6px;
+  flex-direction: column;
 }
 
-.hypeDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.3);
-  transition: all 0.3s;
-}
-
-.hypeDotActive {
-  background: var(--color-cm2-gold);
-  width: 18px;
-}
-
-.statRow {
+.impactGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
 }
 
-.statTile {
+.impactTile {
   background: #fff8ef;
   border: 2px solid #f0e6d2;
   border-radius: 14px;
-  padding: 12px;
+  padding: 10px;
   text-align: center;
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.statValue {
+.impactValue {
   font-weight: 800;
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   color: var(--color-accent);
 }
 
-.statLabel {
-  font-size: 0.72rem;
+.impactLabel {
+  font-size: 0.66rem;
   opacity: 0.65;
   font-weight: 600;
   line-height: 1.25;
 }
 
+/* Programs Spotlight scene */
+
+.scenePrograms {
+  display: flex;
+  flex-direction: column;
+}
+
+.programList {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.programItem {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: #fff8ef;
+  border-radius: 10px;
+  padding: 7px 10px;
+  font-size: 0.78rem;
+}
+
+.programName {
+  font-weight: 700;
+}
+
+.programAge {
+  font-size: 0.7rem;
+  opacity: 0.6;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.programChipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.programChip {
+  background: rgba(30, 159, 179, 0.12);
+  color: var(--color-cm2-teal);
+  border-radius: 999px;
+  padding: 5px 11px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+/* Community Voice */
+
+.voiceTeaser,
+.voiceFull {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.voiceFull {
+  width: 100%;
+  max-width: 1140px;
+  background: rgba(11, 34, 57, 0.55);
+  border-radius: 28px;
+  padding: 48px 60px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(6px);
+  gap: 24px;
+}
+
+.voiceFull .voiceRankLabel {
+  font-size: 0.95rem;
+}
+
+.voiceFull .voiceRankValue {
+  font-size: 0.9rem;
+}
+
+.voiceFull .voiceMeterHeader {
+  font-size: 1rem;
+}
+
+.voiceFull .sceneKicker {
+  color: var(--color-cm2-gold);
+}
+
+.voiceFull .voiceHeroLabel,
+.voiceFull .voiceMeterHeader,
+.voiceFull .voiceRankTitle,
+.voiceFull .voiceRankLabel {
+  color: #fff;
+}
+
+.voiceFull .voiceMeterTrack {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.voiceHeader {
+  text-align: center;
+}
+
+.voiceHero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.voiceHeroValue {
+  font-weight: 800;
+  font-size: 2.6rem;
+  color: var(--color-accent);
+  line-height: 1;
+}
+
+.voiceFull .voiceHeroValue {
+  font-size: 4rem;
+  color: var(--color-cm2-gold);
+}
+
+.voiceHeroLabel {
+  font-weight: 700;
+  font-size: 0.85rem;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.voiceMeterRow {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.voiceFull .voiceMeterRow {
+  flex-direction: row;
+  gap: 24px;
+}
+
+.voiceFull .voiceMeterBlock {
+  flex: 1;
+}
+
+.voiceMeterHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  gap: 8px;
+}
+
+.voiceMeterPercent {
+  color: var(--color-accent);
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.voiceFull .voiceMeterPercent {
+  color: var(--color-cm2-gold);
+}
+
+.voiceMeterTrack {
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(255, 107, 53, 0.14);
+  overflow: hidden;
+}
+
+.voiceMeterFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--color-accent);
+  transition: width 0.8s ease;
+}
+
+.voiceFull .voiceMeterFill {
+  background: linear-gradient(90deg, var(--color-cm2-gold), var(--color-accent));
+}
+
+.voiceRankGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.voiceRankBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.voiceRankTitle {
+  font-weight: 800;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.voiceRankList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.voiceRankRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 2fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.voiceRankLabel {
+  font-size: 0.78rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.voiceRankTrack {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 107, 53, 0.14);
+  overflow: hidden;
+}
+
+.voiceFull .voiceRankTrack {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.voiceRankFill {
+  height: 100%;
+  border-radius: 4px 999px 999px 4px;
+  background: var(--color-accent);
+}
+
+.voiceFull .voiceRankFill {
+  background: var(--color-cm2-gold);
+}
+
+.voiceRankValue {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--color-accent);
+  min-width: 32px;
+  text-align: right;
+}
+
+.voiceFull .voiceRankValue {
+  color: #fff;
+}
+
+.voiceEmpty {
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+/* QR + social footer, always pinned at the bottom of the broadcast panel */
+
 .qrBlock {
+  flex-shrink: 0;
   background: #fffefb;
   border: 3px solid var(--color-accent);
   border-radius: 16px;
@@ -465,8 +896,9 @@
 }
 
 .qrLabel {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
+  margin-bottom: 10px;
 }
 
 .infoSocial {
@@ -477,10 +909,10 @@
 }
 
 .socialPill {
-  padding: 8px 14px;
+  padding: 7px 13px;
   border-radius: 999px;
   font-weight: 700;
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   color: #fff;
 }
 
@@ -496,9 +928,108 @@
   background: #111;
 }
 
-.infoWebsite {
-  text-align: center;
-  font-size: 0.85rem;
+/* Mobile tab navigation (guests viewing /display on a phone from the Hub) */
+
+.mobileTabs {
+  flex-shrink: 0;
+  display: flex;
+  gap: 6px;
+  padding: 10px 14px;
+  overflow-x: auto;
+}
+
+.mobileTab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 8px;
+  border-radius: 999px;
+  border: 2px solid rgba(30, 159, 179, 0.2);
+  background: var(--color-card);
+  color: var(--color-text);
   font-weight: 700;
-  opacity: 0.6;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.mobileTabActive {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+
+.mobileStage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 4px 14px 20px;
+  overflow-y: auto;
+}
+
+/* Mobile layout adjustments */
+
+@media (max-width: 900px) {
+  .page {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+
+  .slideshow {
+    height: 280px;
+  }
+
+  .feedColumn {
+    height: auto;
+    min-height: 70vh;
+  }
+
+  .broadcastPanel {
+    height: auto;
+  }
+
+  .sceneStage {
+    overflow: visible;
+  }
+
+  .voiceFull {
+    padding: 22px 18px;
+  }
+
+  .voiceFull .voiceMeterRow {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .voiceRankGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .voiceRankRow {
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "label label" "track value";
+    row-gap: 4px;
+  }
+
+  .voiceRankLabel {
+    grid-area: label;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .voiceRankTrack {
+    grid-area: track;
+  }
+
+  .voiceRankValue {
+    grid-area: value;
+  }
+
+  .takeoverLayer {
+    padding: 20px;
+  }
 }

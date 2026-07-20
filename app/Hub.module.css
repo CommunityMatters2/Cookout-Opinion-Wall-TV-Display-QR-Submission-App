@@ -1,0 +1,210 @@
+.page {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 32px;
+  position: relative;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.hero {
+  width: 100%;
+  height: 260px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  position: relative;
+}
+
+.heroOverlay {
+  width: 100%;
+  padding: 20px 20px 22px;
+  background: linear-gradient(180deg, transparent, rgba(11, 34, 57, 0.88) 72%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.heroLogo {
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  margin-bottom: 4px;
+}
+
+.heroTitle {
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.2;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.heroTagline {
+  color: var(--color-cm2-gold);
+  font-weight: 600;
+  font-size: 0.98rem;
+}
+
+.impactStrip {
+  width: 100%;
+  max-width: 520px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 16px 20px 4px;
+}
+
+.impactChip {
+  background: var(--color-card);
+  border-radius: 14px;
+  padding: 10px 6px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(43, 29, 14, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.impactChipValue {
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--color-accent);
+}
+
+.impactChipLabel {
+  font-size: 0.62rem;
+  font-weight: 600;
+  opacity: 0.65;
+  line-height: 1.2;
+}
+
+.actions {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 20px 0;
+}
+
+.actionCard,
+.actionCardPrimary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 6px;
+  padding: 22px 22px 20px;
+  border-radius: 22px;
+  border: none;
+  width: 100%;
+  transition: transform 0.15s;
+}
+
+.actionCard:active,
+.actionCardPrimary:active {
+  transform: scale(0.98);
+}
+
+.actionCardPrimary {
+  background: linear-gradient(135deg, var(--color-accent), #ff8a5c);
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(255, 107, 53, 0.3);
+}
+
+.actionCard {
+  background: var(--color-card);
+  color: var(--color-text);
+  box-shadow: 0 10px 24px rgba(43, 29, 14, 0.12);
+  border: 2px solid rgba(30, 159, 179, 0.18);
+}
+
+.actionEmoji {
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.actionTitle {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.actionBody {
+  font-size: 0.92rem;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+.actionCta {
+  margin-top: 6px;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.actionCard .actionCta {
+  color: var(--color-accent);
+}
+
+.footer {
+  width: 100%;
+  max-width: 520px;
+  margin-top: 30px;
+  padding: 0 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.footerMission {
+  font-style: italic;
+  opacity: 0.75;
+  font-size: 0.95rem;
+}
+
+.socialRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.socialButton {
+  padding: 9px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #fff;
+}
+
+.socialButton:nth-child(1) {
+  background: #1877f2;
+}
+
+.socialButton:nth-child(2) {
+  background: #c13584;
+}
+
+.socialButton:nth-child(3) {
+  background: #111;
+}
+
+.footerAddress {
+  font-size: 0.8rem;
+  opacity: 0.55;
+  font-weight: 600;
+}
+
+@media (max-width: 380px) {
+  .impactStrip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

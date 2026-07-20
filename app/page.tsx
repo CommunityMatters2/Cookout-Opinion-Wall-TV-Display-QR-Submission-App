@@ -1,5 +1,5 @@
-import SurveyFlow from "@/app/SurveyFlow";
+import Hub from "@/app/Hub";
 
 export default function Home() {
-  return <SurveyFlow />;
+  return <Hub />;
 }

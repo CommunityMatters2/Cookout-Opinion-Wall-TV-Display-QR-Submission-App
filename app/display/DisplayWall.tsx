@@ -6,10 +6,16 @@ import type { Message } from "@/types/message";
 import { siteConfig } from "@/config/site";
 import PhotoSlideshow from "@/app/display/PhotoSlideshow";
 import LiveOpinionsFeed from "@/app/display/LiveOpinionsFeed";
-import InfoPanel from "@/app/display/InfoPanel";
+import BroadcastPanel from "@/app/display/BroadcastPanel";
+import CommunityVoicePanel from "@/app/display/CommunityVoicePanel";
+import ImpactDashboardScene from "@/app/display/ImpactDashboardScene";
+import MobileTabs, { type MobileTab } from "@/app/display/MobileTabs";
+import { useIsMobile } from "@/app/display/useIsMobile";
 import styles from "./display.module.css";
 
 const MAX_MESSAGES = 150;
+const TAKEOVER_INTERVAL_MS = 120000;
+const TAKEOVER_VISIBLE_MS = 17000;
 
 export default function DisplayWall({
   initialMessages,
@@ -19,6 +25,9 @@ export default function DisplayWall({
   photos: string[];
 }) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [takeoverActive, setTakeoverActive] = useState(false);
+  const [mobileTab, setMobileTab] = useState<MobileTab>("feed");
+  const isMobile = useIsMobile();
   const { cm2 } = siteConfig;
 
   useEffect(() => {
@@ -41,6 +50,16 @@ export default function DisplayWall({
     };
   }, []);
 
+  useEffect(() => {
+    if (isMobile) return;
+    const id = setInterval(() => {
+      setTakeoverActive(true);
+      const hideId = setTimeout(() => setTakeoverActive(false), TAKEOVER_VISIBLE_MS);
+      return () => clearTimeout(hideId);
+    }, TAKEOVER_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, [isMobile]);
+
   return (
     <div className={styles.page}>
       <div className={styles.marquee}>
@@ -54,11 +73,33 @@ export default function DisplayWall({
         </div>
       </div>
 
-      <div className={styles.columns}>
-        <PhotoSlideshow photos={photos} />
-        <LiveOpinionsFeed messages={messages} />
-        <InfoPanel />
-      </div>
+      {isMobile ? (
+        <>
+          <MobileTabs active={mobileTab} onChange={setMobileTab} />
+          <div className={styles.mobileStage}>
+            {mobileTab === "photos" && <PhotoSlideshow photos={photos} />}
+            {mobileTab === "feed" && <LiveOpinionsFeed messages={messages} />}
+            {mobileTab === "impact" && <ImpactDashboardScene compact={false} />}
+            {mobileTab === "voice" && <CommunityVoicePanel variant="full" />}
+          </div>
+        </>
+      ) : (
+        <>
+          <div className={`${styles.broadcast} ${takeoverActive ? styles.broadcastHidden : ""}`}>
+            <div className={styles.heroStrip}>
+              <PhotoSlideshow photos={photos} />
+            </div>
+            <div className={styles.lowerGrid}>
+              <LiveOpinionsFeed messages={messages} />
+              <BroadcastPanel />
+            </div>
+          </div>
+
+          <div className={`${styles.takeoverLayer} ${takeoverActive ? styles.takeoverActive : ""}`}>
+            <CommunityVoicePanel variant="full" />
+          </div>
+        </>
+      )}
     </div>
   );
 }
