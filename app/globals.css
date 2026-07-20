@@ -8,6 +8,49 @@
   --color-cm2-purple: #8452d9;
   --color-cm2-gold: #f5a623;
   --color-cm2-navy: #0b2239;
+
+  /* Golden Hour design tokens — shared spacing/radius/glow scale used by both the
+     light "hub/survey" surfaces above and the dark "display stage" below. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+  --radius-pill: 999px;
+
+  /* Sunset accent family, pulled from CM2's orange hexagon mark. */
+  --accent-amber: #f5a623;
+  --accent-tangerine: #ff6b35;
+  --accent-coral: #ff5a5f;
+  --accent-gold: #ffd166;
+  --accent-teal: #1e9fb3;
+
+  --gradient-sunset: linear-gradient(120deg, var(--accent-coral), var(--accent-tangerine) 45%, var(--accent-gold));
+
+  /* Dark broadcast-stage tokens (display screen). */
+  --stage-bg: #080b12;
+  --stage-bg-2: #0d1420;
+  --stage-navy: #0b2239;
+  --stage-surface: rgba(15, 21, 34, 0.55);
+  --stage-surface-solid: #10182a;
+  --stage-border: rgba(255, 255, 255, 0.1);
+  --stage-text: #fdf6ec;
+  --stage-text-secondary: rgba(253, 246, 236, 0.72);
+  --stage-text-muted: rgba(253, 246, 236, 0.5);
+
+  --glow-amber: 0 0 60px rgba(245, 166, 35, 0.35);
+  --glow-coral: 0 0 60px rgba(255, 90, 95, 0.3);
+  --glow-teal: 0 0 60px rgba(30, 159, 179, 0.28);
+  --shadow-card: 0 24px 60px rgba(0, 0, 0, 0.5);
+  --shadow-float: 0 12px 32px rgba(0, 0, 0, 0.3);
 }
 
 html {
@@ -45,4 +88,21 @@ a {
 button {
   font-family: inherit;
   cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

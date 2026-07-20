@@ -26,6 +26,9 @@ export const missionQuote = {
   attribution: "L'Quette Taylor, Founder & CEO",
 };
 
+export const missionStatement =
+  "Our mission is to initiate communal growth by organizing events and establishing programs with local organizations for residents and youth with common goals that sparks community engagement.";
+
 export type TimelineMilestone = {
   year: string;
   title: string;
@@ -83,6 +86,19 @@ export const impactNumbers: ImpactNumber[] = [
   { value: "500+", label: "AI & Technical Training Hours" },
   { value: "8", label: "Years of Impact" },
 ];
+
+function chunkInto<T>(items: T[], pageCount: number): T[][] {
+  const size = Math.ceil(items.length / pageCount);
+  const pages: T[][] = [];
+  for (let i = 0; i < items.length; i += size) pages.push(items.slice(i, i + size));
+  return pages;
+}
+
+// The 13 impact numbers split into 3 balanced groups, so the Impact Stats scene shows
+// one group per rotation visit instead of cramming all of them onto one screen.
+export const impactNumberPages: ImpactNumber[][] = chunkInto(impactNumbers, 3);
+
+export const photoMomentCaption = "CM2 Summer Cookout · Poughkeepsie, NY";
 
 export type Program = { name: string; ageRange?: string; description?: string };
 
@@ -196,10 +212,13 @@ export const qualityPillarsQuote = {
   attribution: "National Study of Youth Programs",
 };
 
-// "Why Summer Matters" / community-need framing — used sparingly, kept upbeat.
-export const summerWhyItMatters = {
-  learningLoss: { value: "2–3 Mo", label: "Of learning lost each summer without engagement" },
-  workingParents: { value: "72%", label: "Of working parents depend on summer programs to stay employed" },
-  reducedRisk: { value: "43%", label: "Less juvenile crime in areas with strong summer programs" },
-  lessIsolation: { value: "60%", label: "Less isolation & anxiety among enrolled youth" },
-};
+// "Why Summer Matters" — quick facts shown as an icon + stat grid on the display wall.
+export const summerWhyItMatters = [
+  { key: "learningLoss", value: "2–3 Mo", label: "Of learning lost each summer without engagement" },
+  { key: "reducedRisk", value: "43%", label: "Less juvenile crime in areas with strong summer programs" },
+  { key: "workingParents", value: "72%", label: "Of working parents depend on summer programs to work" },
+  { key: "workforceReady", value: "1 in 3", label: "Teens in summer programs enter the workforce ready" },
+  { key: "lessIsolation", value: "60%", label: "Less isolation & anxiety among enrolled youth" },
+];
+
+export const summerInfrastructureLine = "Summer should not be an extra — it has to be Infrastructure.";

@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import type { SurveyQuestion } from "@/lib/surveyQuestions";
 import type { SurveyAnswers } from "@/types/survey";
 import styles from "./SurveyFlow.module.css";
@@ -30,14 +31,15 @@ export default function QuestionStep({
     return (
       <div className={styles.yesNoRow}>
         {(["yes", "no"] as const).map((option) => (
-          <button
+          <motion.button
             key={option}
             type="button"
             className={`${styles.yesNoButton} ${value === option ? styles.yesNoButtonSelected : ""}`}
             onClick={() => onSetYesNo(question.key, option)}
+            whileTap={{ scale: 0.95 }}
           >
             {option === "yes" ? "Yes" : "No"}
-          </button>
+          </motion.button>
         ))}
       </div>
     );
@@ -67,15 +69,16 @@ export default function QuestionStep({
           const isSelected = selected.includes(option);
           const disabled = atMax && !isSelected;
           return (
-            <button
+            <motion.button
               key={option}
               type="button"
               disabled={disabled}
               className={`${styles.chip} ${isSelected ? styles.chipSelected : ""}`}
               onClick={() => onToggleMulti(question.key, option)}
+              whileTap={disabled ? undefined : { scale: 0.94 }}
             >
               {option}
-            </button>
+            </motion.button>
           );
         })}
       </div>

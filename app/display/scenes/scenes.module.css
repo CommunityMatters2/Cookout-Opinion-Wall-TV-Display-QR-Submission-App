@@ -1,0 +1,806 @@
+/* ============================================================
+   Per-scene styles for the Display Stage rotation. Each class is
+   scoped by CSS Modules, so names are grouped by scene via comments
+   rather than split across many tiny files.
+   ============================================================ */
+
+.sceneRoot {
+  width: 100%;
+  max-width: 1500px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.headerBlock {
+  margin-bottom: clamp(20px, 3vw, 44px);
+}
+
+/* ---------- Live Opinions ---------- */
+
+.liveScene {
+  width: 100%;
+  max-width: 1100px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.feedViewport {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 6%, #000 92%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 6%, #000 92%, transparent);
+}
+
+.feedEmpty {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: var(--stage-text-secondary);
+}
+
+.feedTrack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  will-change: transform;
+}
+
+.bubbleCard {
+  position: relative;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: var(--stage-surface);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--stage-border);
+  border-radius: var(--radius-lg);
+  padding: 16px 22px;
+  box-shadow: var(--shadow-float);
+  flex-shrink: 0;
+}
+
+.bubbleCardEven {
+  transform: rotate(-0.5deg);
+}
+
+.bubbleCardOdd {
+  transform: rotate(0.5deg);
+}
+
+.bubbleGlow {
+  box-shadow: 0 0 0 2px var(--accent-gold), var(--glow-amber);
+  animation: glowFade 3.2s ease forwards;
+}
+
+@keyframes glowFade {
+  0% {
+    box-shadow: 0 0 0 2px var(--accent-gold), 0 0 50px rgba(245, 166, 35, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 2px transparent, var(--shadow-float);
+  }
+}
+
+.newRibbon {
+  position: absolute;
+  top: 8px;
+  right: 14px;
+  background: var(--gradient-sunset);
+  color: #1a0e00;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 2px 9px;
+  border-radius: var(--radius-pill);
+}
+
+.avatarChip {
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+}
+
+.avatarChip0 {
+  background: linear-gradient(135deg, var(--accent-tangerine), var(--accent-coral));
+}
+.avatarChip1 {
+  background: linear-gradient(135deg, var(--accent-teal), #3fd0e6);
+}
+.avatarChip2 {
+  background: linear-gradient(135deg, #43a75b, #7ee68b);
+}
+.avatarChip3 {
+  background: linear-gradient(135deg, #8452d9, #b98cff);
+}
+.avatarChip4 {
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+}
+
+.bubbleName {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--accent-gold);
+  margin-bottom: 3px;
+}
+
+.bubbleMessage {
+  font-size: 1.15rem;
+  line-height: 1.4;
+  color: var(--stage-text);
+  word-break: break-word;
+}
+
+.spotlightWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  padding: 40px;
+}
+
+.spotlightCard {
+  position: relative;
+  pointer-events: auto;
+  width: min(720px, 90%);
+  background: linear-gradient(135deg, rgba(11, 34, 57, 0.92), rgba(18, 51, 84, 0.92));
+  border: 1px solid rgba(245, 166, 35, 0.5);
+  border-radius: var(--radius-xl);
+  padding: 32px 38px;
+  box-shadow: var(--glow-amber), 0 30px 70px rgba(0, 0, 0, 0.5);
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.spotlightBadge {
+  position: absolute;
+  top: -16px;
+  left: 32px;
+  background: var(--gradient-sunset);
+  color: #1a0e00;
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--glow-amber);
+}
+
+.spotlightAvatar {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: #fff;
+  background: var(--gradient-sunset);
+}
+
+.spotlightName {
+  color: var(--accent-gold);
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-bottom: 6px;
+}
+
+.spotlightMessage {
+  font-size: 1.5rem;
+  line-height: 1.35;
+  color: #fff;
+  font-weight: 600;
+}
+
+.particle {
+  position: absolute;
+  font-size: 1.6rem;
+  animation: particleBurst 1.1s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes particleBurst {
+  0% {
+    transform: translate(0, 0) scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--px, 0), var(--py, -60px)) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* ---------- Impact Stats ---------- */
+
+.impactGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(14px, 2vw, 26px);
+  width: 100%;
+}
+
+.impactCard {
+  padding: clamp(20px, 2.4vw, 34px) clamp(16px, 2vw, 26px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.impactIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(245, 166, 35, 0.22), rgba(255, 107, 53, 0.14));
+  color: var(--accent-gold);
+  margin-bottom: 6px;
+}
+
+.impactValue {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 3.6vw, 3.2rem);
+  background: linear-gradient(120deg, #fff, var(--accent-gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  line-height: 1;
+}
+
+.impactLabel {
+  font-weight: 700;
+  font-size: clamp(0.9rem, 1.1vw, 1.05rem);
+  color: var(--stage-text);
+}
+
+.impactDetail {
+  font-size: 0.82rem;
+  color: var(--stage-text-muted);
+}
+
+/* ---------- Growth Timeline ---------- */
+
+.timelineScene {
+  width: 100%;
+}
+
+.timelineTrackWrap {
+  position: relative;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.timelineLine {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--gradient-sunset);
+  box-shadow: 0 0 14px rgba(245, 166, 35, 0.5);
+}
+
+.timelineNodes {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.timelineNode {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 0 6px;
+}
+
+.timelineDot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--gradient-sunset);
+  box-shadow: var(--glow-amber);
+  flex-shrink: 0;
+}
+
+.timelineYear {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.3rem, 2vw, 1.8rem);
+  color: var(--accent-gold);
+}
+
+.timelineCard {
+  padding: 14px 14px 16px;
+  min-height: 150px;
+  width: 100%;
+}
+
+.timelineTitle {
+  font-weight: 800;
+  font-size: 0.92rem;
+  color: var(--stage-text);
+  margin-bottom: 8px;
+}
+
+.timelineItems {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.72rem;
+  color: var(--stage-text-secondary);
+  line-height: 1.35;
+}
+
+/* ---------- Signature Programs ---------- */
+
+.programsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(12px, 1.6vw, 22px);
+  width: 100%;
+}
+
+.programCard {
+  padding: clamp(18px, 2vw, 26px) clamp(16px, 1.8vw, 22px);
+  text-align: left;
+  border-top: 3px solid var(--card-accent, var(--accent-gold));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.programIconWrap {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--card-accent, var(--accent-gold)) 20%, transparent);
+  color: var(--card-accent, var(--accent-gold));
+  margin-bottom: 4px;
+}
+
+.programTag {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--card-accent, var(--accent-gold));
+}
+
+.programName {
+  font-weight: 800;
+  font-size: 1.08rem;
+  color: var(--stage-text);
+}
+
+.programDesc {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--stage-text-secondary);
+}
+
+/* ---------- Summer Camp ---------- */
+
+.campCadenceRow {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: clamp(18px, 2.4vw, 30px);
+}
+
+.campCadenceBadge {
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 107, 53, 0.14);
+  border: 1px solid rgba(255, 107, 53, 0.35);
+  color: var(--accent-gold);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.campGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: clamp(10px, 1.4vw, 18px);
+  width: 100%;
+}
+
+.campTile {
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.campValue {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  color: var(--accent-gold);
+}
+
+.campLabel {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--stage-text-secondary);
+  line-height: 1.25;
+}
+
+/* ---------- ROI ---------- */
+
+.roiScene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(24px, 3vw, 40px);
+}
+
+.roiCoin {
+  width: clamp(160px, 16vw, 230px);
+  height: clamp(160px, 16vw, 230px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--accent-gold), var(--accent-tangerine) 60%, var(--accent-coral) 100%);
+  box-shadow: 0 0 90px rgba(245, 166, 35, 0.55), inset 0 4px 20px rgba(255, 255, 255, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #1a0e00;
+  animation: coinPulse 3.4s ease-in-out infinite;
+}
+
+@keyframes coinPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+.roiCoinValue {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 400;
+}
+
+.roiCoinLabel {
+  font-weight: 800;
+  font-size: clamp(0.7rem, 1vw, 0.85rem);
+  letter-spacing: 0.08em;
+}
+
+.roiFiguresRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(12px, 1.6vw, 20px);
+  width: 100%;
+  max-width: 1000px;
+}
+
+.roiFigure {
+  padding: 16px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.roiFigureValue {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  color: var(--accent-gold);
+}
+
+.roiFigureLabel {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--stage-text-secondary);
+}
+
+.roiTagline {
+  max-width: 900px;
+  font-size: clamp(1.1rem, 1.8vw, 1.5rem);
+  font-weight: 700;
+  color: var(--stage-text);
+  line-height: 1.4;
+}
+
+/* ---------- Why Summer Matters ---------- */
+
+.whyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: clamp(12px, 1.6vw, 22px);
+  width: 100%;
+  margin-bottom: clamp(20px, 2.4vw, 32px);
+}
+
+.whyCard {
+  padding: 20px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.whyIcon {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30, 159, 179, 0.18);
+  color: var(--accent-teal);
+}
+
+.whyValue {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+  color: var(--stage-text);
+}
+
+.whyLabel {
+  font-size: 0.8rem;
+  color: var(--stage-text-secondary);
+  line-height: 1.3;
+}
+
+.whyClosing {
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+/* ---------- Mission & Quote ---------- */
+
+.missionScene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(18px, 2.6vw, 30px);
+  max-width: 1000px;
+}
+
+.missionQuoteText {
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.4rem, 3vw, 2.4rem);
+  line-height: 1.4;
+  color: var(--stage-text);
+}
+
+.missionAttribution {
+  color: var(--accent-gold);
+  font-weight: 700;
+  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+}
+
+.missionHypeLine {
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  color: var(--stage-text-secondary);
+  min-height: 1.4em;
+}
+
+.missionTagline {
+  font-size: 0.85rem;
+  color: var(--stage-text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Photo Moment ---------- */
+
+.photoCaptionChip {
+  position: absolute;
+  bottom: clamp(70px, 8vw, 100px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(11, 34, 57, 0.65);
+  backdrop-filter: blur(10px);
+  padding: 10px 22px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(245, 166, 35, 0.3);
+  font-weight: 700;
+  font-size: clamp(0.95rem, 1.3vw, 1.15rem);
+  white-space: nowrap;
+}
+
+/* ---------- Community Voice ---------- */
+
+.voiceHero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: clamp(20px, 2.6vw, 32px);
+}
+
+.voiceHeroValue {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  background: linear-gradient(120deg, #fff, var(--accent-gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  line-height: 1;
+}
+
+.voiceHeroLabel {
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--stage-text-muted);
+}
+
+.voiceGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(20px, 3vw, 44px);
+  width: 100%;
+}
+
+.voiceMeterBlock {
+  margin-bottom: 16px;
+}
+
+.voiceMeterHeader {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+  color: var(--stage-text);
+}
+
+.voiceMeterPercent {
+  color: var(--accent-gold);
+}
+
+.voiceMeterTrack,
+.voiceRankTrack {
+  height: 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.voiceRankTrack {
+  height: 9px;
+}
+
+.voiceMeterFill,
+.voiceRankFill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--gradient-sunset);
+  transition: width 0.9s ease;
+}
+
+.voiceRankTitle {
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--stage-text-secondary);
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.voiceRankRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 2fr auto;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.voiceRankLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: left;
+  color: var(--stage-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.voiceRankValue {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+  min-width: 34px;
+  text-align: right;
+}
+
+.voiceEmpty {
+  color: var(--stage-text-muted);
+  font-size: 0.9rem;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .programsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .roiFiguresRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .voiceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .timelineNodes {
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .timelineLine {
+    display: none;
+  }
+
+  .timelineNode {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  .voiceRankRow {
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "label label" "track value";
+    row-gap: 4px;
+  }
+
+  .voiceRankLabel {
+    grid-area: label;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .voiceRankTrack {
+    grid-area: track;
+  }
+
+  .voiceRankValue {
+    grid-area: value;
+  }
+}

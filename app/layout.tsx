@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Geist, Anton } from "next/font/google";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const anton = Anton({
+  variable: "--font-display",
+  weight: "400",
   subsets: ["latin"],
 });
 
@@ -22,7 +28,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={geistSans.variable}
+      className={`${geistSans.variable} ${anton.variable}`}
       style={
         {
           "--color-background": colors.background,
