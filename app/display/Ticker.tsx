@@ -41,9 +41,13 @@ export default function Ticker({ liveCount }: { liveCount: number }) {
         <div className={styles.tickerScroll}>
           {Array.from({ length: 3 }).map((_, i) => (
             <span key={i} className={styles.tickerItem}>
-              <strong>{siteConfig.eventTitle}</strong> &nbsp;•&nbsp; <strong>{cm2.orgName}</strong> — &ldquo;
-              {cm2.mission}&rdquo; &nbsp;•&nbsp; {cm2.impactFact} &nbsp;•&nbsp; Scan the QR to share your
-              opinion &nbsp;•&nbsp;
+              <strong>{siteConfig.eventTitle}</strong> &nbsp;•&nbsp; <strong>{cm2.orgName}</strong> &nbsp;•&nbsp;{" "}
+              {cm2.hypeLines.map((hype, j) => (
+                <span key={j}>
+                  {hype.headline} — {hype.sub} &nbsp;•&nbsp;{" "}
+                </span>
+              ))}
+              {cm2.impactFact} &nbsp;•&nbsp; Scan the QR to share your opinion &nbsp;•&nbsp;
             </span>
           ))}
         </div>

@@ -2,62 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { Vote } from "lucide-react";
+import { useSurveyStats, type OptionCount } from "@/lib/hooks/useSurveyStats";
 import CountUp from "@/app/display/CountUp";
 import shared from "../display.module.css";
 import styles from "./scenes.module.css";
 
-const POLL_MS = 20000;
-
-type YesNoSplit = { yes: number; no: number; yesPercent: number; noPercent: number };
-type OptionCount = { option: string; count: number; percent: number };
-
-type SurveyStats = {
-  totalResponses: number;
-  visitedBefore: YesNoSplit | null;
-  cityNeedsCenter: YesNoSplit | null;
-  desiredPrograms: OptionCount[];
-  prioritySpaces: OptionCount[];
-  likelyUsers: OptionCount[];
-  bestTimes: OptionCount[];
-};
-
-const EMPTY_STATS: SurveyStats = {
-  totalResponses: 0,
-  visitedBefore: null,
-  cityNeedsCenter: null,
-  desiredPrograms: [],
-  prioritySpaces: [],
-  likelyUsers: [],
-  bestTimes: [],
-};
-
-function useSurveyStats(): SurveyStats {
-  const [stats, setStats] = useState<SurveyStats>(EMPTY_STATS);
-
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      try {
-        const res = await fetch("/api/survey-stats", { cache: "no-store" });
-        if (!res.ok) return;
-        const data = (await res.json()) as SurveyStats;
-        if (!cancelled) setStats(data);
-      } catch {
-        // Keep showing the last-known stats if a poll fails.
-      }
-    }
-    load();
-    const id = setInterval(load, POLL_MS);
-    return () => {
-      cancelled = true;
-      clearInterval(id);
-    };
-  }, []);
-
-  return stats;
-}
-
-function RankedList({ title, items, topN }: { title: string; items: OptionCount[]; topN: number }) {
+function RankedList({
+  title,
+  items,
+  topN,
+  revealed,
+}: {
+  title: string;
+  items: OptionCount[];
+  topN: number;
+  revealed: boolean;
+}) {
   const top = items.slice(0, topN);
   const maxCount = top[0]?.count ?? 1;
   return (
@@ -67,7 +27,10 @@ function RankedList({ title, items, topN }: { title: string; items: OptionCount[
         <div key={item.option} className={styles.voiceRankRow}>
           <span className={styles.voiceRankLabel}>{item.option}</span>
           <div className={styles.voiceRankTrack}>
-            <div className={styles.voiceRankFill} style={{ width: `${Math.max(6, (item.count / maxCount) * 100)}%` }} />
+            <div
+              className={styles.voiceRankFill}
+              style={{ width: revealed ? `${Math.max(6, (item.count / maxCount) * 100)}%` : "0%" }}
+            />
           </div>
           <span className={styles.voiceRankValue}>{item.percent}%</span>
         </div>
@@ -79,6 +42,15 @@ function RankedList({ title, items, topN }: { title: string; items: OptionCount[
 
 export default function CommunityVoiceScene() {
   const stats = useSurveyStats();
+  // Bars start at 0 and grow in once real data has landed (rather than snapping
+  // straight to their final width on mount) — the existing `transition: width`
+  // rule on the fill classes then also re-animates them on every later poll.
+  const [revealed, setRevealed] = useState(false);
+  useEffect(() => {
+    if (stats.totalResponses === 0 && !stats.visitedBefore) return;
+    const id = requestAnimationFrame(() => setRevealed(true));
+    return () => cancelAnimationFrame(id);
+  }, [stats]);
 
   return (
     <div className={styles.sceneRoot}>
@@ -101,7 +73,10 @@ export default function CommunityVoiceScene() {
               <span className={styles.voiceMeterPercent}>{stats.visitedBefore.yesPercent}% yes</span>
             </div>
             <div className={styles.voiceMeterTrack}>
-              <div className={styles.voiceMeterFill} style={{ width: `${stats.visitedBefore.yesPercent}%` }} />
+              <div
+                className={styles.voiceMeterFill}
+                style={{ width: revealed ? `${stats.visitedBefore.yesPercent}%` : "0%" }}
+              />
             </div>
           </div>
           <div className={`${shared.glassPanel} ${styles.voiceMeterBlock}`} style={{ padding: "18px 22px" }}>
@@ -110,7 +85,10 @@ export default function CommunityVoiceScene() {
               <span className={styles.voiceMeterPercent}>{stats.cityNeedsCenter.yesPercent}% yes</span>
             </div>
             <div className={styles.voiceMeterTrack}>
-              <div className={styles.voiceMeterFill} style={{ width: `${stats.cityNeedsCenter.yesPercent}%` }} />
+              <div
+                className={styles.voiceMeterFill}
+                style={{ width: revealed ? `${stats.cityNeedsCenter.yesPercent}%` : "0%" }}
+              />
             </div>
           </div>
         </div>
@@ -118,10 +96,10 @@ export default function CommunityVoiceScene() {
 
       <div className={styles.voiceGrid}>
         <div className={`${shared.glassPanel}`} style={{ padding: "22px 26px" }}>
-          <RankedList title="Most-wanted programs" items={stats.desiredPrograms} topN={5} />
+          <RankedList title="Most-wanted programs" items={stats.desiredPrograms} topN={5} revealed={revealed} />
         </div>
         <div className={`${shared.glassPanel}`} style={{ padding: "22px 26px" }}>
-          <RankedList title="Priority spaces" items={stats.prioritySpaces} topN={5} />
+          <RankedList title="Priority spaces" items={stats.prioritySpaces} topN={5} revealed={revealed} />
         </div>
       </div>
     </div>

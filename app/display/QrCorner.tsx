@@ -9,7 +9,7 @@ export default function QrCorner() {
   return (
     <div className={styles.qrCorner} role="complementary" aria-label="Scan to join the survey and opinion wall">
       <div className={styles.qrBox}>
-        <QRCodeSVG value={submitUrl} size={104} />
+        <QRCodeSVG value={submitUrl} size={104} level="H" />
       </div>
       <span className={styles.qrNudge} aria-hidden="true">
         Scan me 👆

@@ -9,6 +9,7 @@ import type { SurveyAnswers } from "@/types/survey";
 export type SubmitResult = {
   ok: boolean;
   error?: string;
+  id?: string;
 };
 
 export type SurveyResult = {
@@ -67,11 +68,11 @@ export async function submitMessage(
   }
 
   const supabase = createServerSupabaseClient();
-  const { error } = await supabase.from("messages").insert({ name, message });
+  const { data, error } = await supabase.from("messages").insert({ name, message }).select("id").single();
 
   if (error) {
     return { ok: false, error: "Something went wrong, please try again." };
   }
 
-  return { ok: true };
+  return { ok: true, id: data?.id };
 }

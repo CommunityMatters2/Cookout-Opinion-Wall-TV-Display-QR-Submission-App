@@ -754,9 +754,14 @@
   font-size: 0.9rem;
 }
 
-/* ---------- Responsive ---------- */
+/* ---------- Contained detail overlay ----------
+   Detail views now render inside the Explore Zone's widgetDetailOverlay (a
+   fraction of the TV viewport, not the full screen), which sets
+   `container-type: inline-size` — these rules key off that container's own
+   width rather than the viewport, since a narrow container on a huge TV
+   viewport wouldn't otherwise trigger the width-based media query below. */
 
-@media (max-width: 900px) {
+@container widgetDetail (max-width: 760px) {
   .programsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -781,6 +786,46 @@
   .timelineNode {
     flex-direction: row;
     text-align: left;
+  }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .programsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .roiFiguresRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .voiceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Our Journey becomes a horizontally swipeable strip on real phone
+     viewports (this media query no longer needs to also cover the TV's
+     narrow contained-overlay case — that's the @container rule above). */
+  .timelineTrackWrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 10px;
+  }
+
+  .timelineLine {
+    display: none;
+  }
+
+  .timelineNodes {
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .timelineNode {
+    min-width: 220px;
+    scroll-snap-align: start;
   }
 
   .voiceRankRow {

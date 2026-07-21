@@ -222,58 +222,161 @@
   }
 }
 
-/* ---------- Scene viewport ---------- */
+/* ---------- Zones row (Live Zone + Explore Zone) ---------- */
 
-.sceneViewport {
+.zonesRow {
   flex: 1;
   min-height: 0;
-  position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: clamp(16px, 3vw, 40px) clamp(20px, 6vw, 90px) clamp(60px, 8vw, 100px);
+  gap: clamp(14px, 1.6vw, 28px);
+  padding: clamp(14px, 2vw, 28px) clamp(16px, 2.4vw, 32px) clamp(70px, 8vw, 110px);
 }
 
-.sceneInner {
+/* ---------- Live Zone ---------- */
+
+.liveZone {
+  flex: 0 0 40%;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+}
+
+.liveZone > * {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ---------- Explore Zone ---------- */
+
+.exploreZone {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  outline: none;
+}
+
+.widgetGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 1fr;
+  gap: clamp(10px, 1.4vw, 18px);
   width: 100%;
   height: 100%;
+}
+
+.widgetTile {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: clamp(12px, 1.4vw, 20px);
+  background: var(--stage-surface);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--stage-border);
+  border-top: 3px solid var(--widget-accent, var(--accent-gold));
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.widgetTile:hover {
+  transform: translateY(-2px);
+}
+
+.widgetTileFocused {
+  box-shadow: 0 0 0 2px var(--widget-accent, var(--accent-gold)), var(--glow-amber), var(--shadow-card);
+  transform: translateY(-2px);
+}
+
+.widgetTileHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.widgetTileIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--widget-accent, var(--accent-gold)) 22%, transparent);
+  color: var(--widget-accent, var(--accent-gold));
+  flex-shrink: 0;
+}
+
+.widgetTileTitle {
+  font-weight: 800;
+  font-size: clamp(0.72rem, 0.9vw, 0.85rem);
+  letter-spacing: 0.02em;
+  color: var(--stage-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.widgetTileSummary {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.exploreHint {
+  position: absolute;
+  bottom: -2px;
+  right: 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  animation: nudgeBounce 3.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.widgetDetailOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  background: var(--stage-surface-solid);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(245, 166, 35, 0.35);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glow-amber), 0 30px 70px rgba(0, 0, 0, 0.5);
+  padding: clamp(20px, 2.6vw, 40px);
+  overflow-y: auto;
+  container-type: inline-size;
+  container-name: widgetDetail;
+}
+
+.widgetDetailContent {
+  margin: auto;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* ---------- Scene progress ---------- */
-
-.sceneProgress {
+.widgetCloseButton {
   position: absolute;
-  bottom: clamp(14px, 2vw, 22px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 20;
+  top: clamp(12px, 1.6vw, 20px);
+  right: clamp(12px, 1.6vw, 20px);
+  z-index: 41;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   display: flex;
-  gap: 7px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--stage-border);
+  color: var(--stage-text);
 }
 
-.progressDot {
-  width: 7px;
-  height: 7px;
-  border-radius: var(--radius-pill);
-  background: rgba(253, 246, 236, 0.25);
-  transition: all 0.35s ease;
-}
-
-.progressDotActive {
-  width: 22px;
-  background: var(--gradient-sunset);
-  box-shadow: 0 0 10px rgba(255, 166, 35, 0.6);
-}
-
-.progressDotLive {
-  background: #ff4d4d;
-  box-shadow: 0 0 8px rgba(255, 77, 77, 0.7);
-}
-
-/* ---------- QR corner ---------- */
+/* ---------- QR corners (survey right, donate left) ---------- */
 
 .qrCorner {
   position: absolute;
@@ -293,6 +396,13 @@
   animation: qrBreathe 4s ease-in-out infinite;
 }
 
+.qrCornerDonate {
+  right: auto;
+  left: clamp(14px, 2vw, 28px);
+  border-color: rgba(255, 209, 102, 0.55);
+  box-shadow: 0 0 60px rgba(255, 209, 102, 0.3), var(--shadow-float);
+}
+
 @keyframes qrBreathe {
   0%,
   100% {
@@ -310,6 +420,14 @@
   line-height: 0;
 }
 
+.qrDonateLabel {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+  text-align: center;
+  line-height: 1.2;
+}
+
 .qrNudge {
   display: flex;
   align-items: center;
@@ -318,6 +436,10 @@
   font-weight: 700;
   color: var(--accent-gold);
   animation: nudgeBounce 1.8s ease-in-out infinite;
+}
+
+.qrNudgeDonate {
+  color: #ffd166;
 }
 
 @keyframes nudgeBounce {
@@ -393,7 +515,11 @@
   }
 }
 
-/* ---------- Mobile ---------- */
+/* ---------- Small-viewport fallback ----------
+   /display is the TV surface — phones are routed to /wall instead (see the
+   client-side viewport redirect). These rules only cover the brief window
+   before that redirect fires (or JS being unavailable), so they degrade the
+   grid gracefully rather than fully reflowing it for touch use. */
 
 @media (max-width: 900px) {
   .qrCorner {
@@ -413,12 +539,17 @@
     display: none;
   }
 
-  /* Scene content can be taller than a phone's viewport (12-tile stat grids, the
-     full timeline, etc.) — let it scroll instead of silently clipping. */
-  .sceneViewport {
-    align-items: flex-start;
+  .zonesRow {
+    flex-direction: column;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 140px;
+  }
+
+  .liveZone {
+    flex: 0 0 auto;
+    max-height: 40vh;
+  }
+
+  .widgetGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

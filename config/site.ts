@@ -26,6 +26,7 @@ export const siteConfig = {
     address: "50 N. Hamilton St, Poughkeepsie, NY 12601",
     phone: "(315) 275-3087",
     website: "communitymatters2.org",
+    donateUrl: "https://www.communitymatters2.org/checkout/donate?donatePageId=5f36cf18417b335f08ae083f",
     social: {
       facebook: "https://facebook.com/communitymatters2",
       instagram: "https://instagram.com/communitymatters2",

@@ -94,7 +94,7 @@ export default function Hub() {
           </span>
         </motion.button>
 
-        <Link href="/display" className={styles.actionCard}>
+        <Link href="/wall" className={styles.actionCard}>
           <span className={styles.actionIcon}>
             <Tv size={26} strokeWidth={2} />
           </span>

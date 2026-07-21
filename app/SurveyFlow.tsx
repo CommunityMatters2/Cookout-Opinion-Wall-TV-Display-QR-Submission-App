@@ -294,7 +294,10 @@ export default function SurveyFlow() {
               Your voice is on the wall! 🎉
             </motion.h1>
             <p className={styles.introText}>Look up at the big screen — you&rsquo;re on it!</p>
-            <Link href="/display" className={styles.watchWallButton}>
+            <Link
+              href={messageState.id ? `/wall?highlight=${messageState.id}` : "/wall"}
+              className={styles.watchWallButton}
+            >
               <Tv size={18} /> Watch the Live Wall <ArrowRight size={16} />
             </Link>
             <button type="button" className={styles.backButton} onClick={startOver}>
