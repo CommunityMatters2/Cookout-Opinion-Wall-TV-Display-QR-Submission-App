@@ -132,14 +132,17 @@ export default function SurveyFlow() {
     setAnswers((prev) => ({ ...prev, [key]: value }));
   }
 
-  // Each tap replaces the whole selection (rather than toggling it into a
-  // list) since a single tap now immediately advances to the next question —
-  // there's no later moment to pick a second option.
   function selectOption(
     key: "desiredPrograms" | "prioritySpaces" | "likelyUsers" | "bestTimes",
     option: string
   ) {
-    setAnswers((prev) => ({ ...prev, [key]: [option] }));
+    setAnswers((prev) => {
+      const current = prev[key];
+      const next = current.includes(option)
+        ? current.filter((o) => o !== option)
+        : [...current, option];
+      return { ...prev, [key]: next };
+    });
   }
 
   function setOtherText(key: "desiredProgramsOther" | "prioritySpacesOther", value: string) {
@@ -237,6 +240,9 @@ export default function SurveyFlow() {
                   transition={{ type: "spring", stiffness: 300, damping: 28 }}
                 >
                   <h1 className={styles.question}>{currentQuestion.question}</h1>
+                  {currentQuestion.type === "multi" && currentQuestion.helper && (
+                    <p className={styles.helper}>{currentQuestion.helper}</p>
+                  )}
 
                   <QuestionStep
                     question={currentQuestion}
@@ -260,7 +266,7 @@ export default function SurveyFlow() {
                     >
                       Back
                     </button>
-                    {currentQuestion.type === "text" && (
+                    {(currentQuestion.type === "text" || currentQuestion.type === "multi") && (
                       <motion.button
                         type="button"
                         className={styles.submitButton}
@@ -268,7 +274,11 @@ export default function SurveyFlow() {
                         disabled={!currentAnswered || isSubmittingSurvey}
                         whileTap={currentAnswered ? { scale: 0.97 } : undefined}
                       >
-                        Next
+                        {isSubmittingSurvey
+                          ? "Saving…"
+                          : questionIndex < surveyQuestions.length - 1
+                            ? "Next"
+                            : "Finish survey"}
                       </motion.button>
                     )}
                   </div>
