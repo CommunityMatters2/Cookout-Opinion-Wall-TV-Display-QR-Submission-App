@@ -108,10 +108,7 @@ export default function WallLiveFeed() {
                 >
                   {isHighlighted && <span className={styles.feedYouBanner}>You&rsquo;re on the wall! 🎉</span>}
                   {isPending && !isHighlighted && <span className={styles.feedPendingBadge}>Posting&hellip;</span>}
-                  <p className={styles.feedBubbleName}>
-                    {m.name}
-                    {m.account_id && <span className={styles.insiderBadge}>Insider</span>}
-                  </p>
+                  <p className={styles.feedBubbleName}>{m.name}</p>
                   <p className={styles.feedBubbleMessage}>{m.message}</p>
                   {!isPending && <ReactionBar messageId={m.id} />}
                 </motion.li>

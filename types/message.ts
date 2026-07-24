@@ -6,5 +6,4 @@ export type Message = {
   message: string;
   status: MessageStatus;
   created_at: string;
-  account_id?: string | null;
 };

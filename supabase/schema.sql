@@ -96,24 +96,6 @@ create policy "Public can log share events"
   on share_events for insert
   with check (true);
 
--- CM2 Insider accounts — no email/SMS verification by design (a low-stakes
--- community perk, not a security boundary). All reads/writes go through
--- service-role server actions since there's no auth.uid() to key RLS off of.
-create table if not exists accounts (
-  id uuid primary key default gen_random_uuid(),
-  name text not null,
-  contact text not null,
-  contact_type text not null check (contact_type in ('email', 'phone')),
-  featured boolean not null default false,
-  created_at timestamptz not null default now()
-);
-
-alter table accounts enable row level security;
--- Intentionally no policies (default-deny): every access path is a
--- service-role server action, so RLS just needs to keep the anon key out.
-
-alter table messages add column if not exists account_id uuid references accounts(id) on delete set null;
-
 -- Emoji reactions. The TV's flying-particle effect is driven entirely by
 -- Supabase Realtime Broadcast (ephemeral, no DB write in the hot path — see
 -- lib/hooks/useReactionBroadcast.ts); this table is only the debounced,
