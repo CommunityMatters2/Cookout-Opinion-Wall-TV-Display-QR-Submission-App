@@ -8,8 +8,21 @@
   position: relative;
   overflow: hidden;
   min-height: 100dvh;
-  background: var(--stage-bg);
-  color: var(--stage-text);
+  background: var(--hub-bg-gradient);
+  background-size: 200% 200%;
+  animation: hubGradientShift 18s ease-in-out infinite;
+  color: var(--hub-text);
+}
+
+.page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--hub-grain);
+  opacity: 0.05;
+  mix-blend-mode: overlay;
 }
 
 .ambientGlow {
@@ -170,22 +183,6 @@
 .submitButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.watchWallButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 8px;
-  padding: 16px;
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #fff;
-  background: var(--stage-navy);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-float);
-  width: 100%;
 }
 
 .backButton {

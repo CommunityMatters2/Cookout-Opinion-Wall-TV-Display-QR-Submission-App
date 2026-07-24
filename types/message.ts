@@ -1,7 +1,10 @@
+export type MessageStatus = "approved" | "pending" | "rejected";
+
 export type Message = {
   id: string;
   name: string;
   message: string;
-  approved: boolean;
+  status: MessageStatus;
   created_at: string;
+  account_id?: string | null;
 };

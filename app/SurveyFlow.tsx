@@ -1,20 +1,20 @@
 "use client";
 
-import { useActionState, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Tv, ArrowRight } from "lucide-react";
-import { submitMessage, submitSurvey, type SubmitResult } from "@/app/actions";
+import { submitSurvey } from "@/app/actions";
+import { useSubmitWithRetry } from "@/lib/hooks/useSubmitWithRetry";
 import { siteConfig } from "@/config/site";
 import { surveyQuestions, isQuestionAnswered } from "@/lib/surveyQuestions";
 import { emptySurveyAnswers, type SurveyAnswers } from "@/types/survey";
 import QuestionStep from "@/app/QuestionStep";
 import styles from "./SurveyFlow.module.css";
 
-type Stage = "intro" | "question" | "thanks" | "message" | "done";
+type Stage = "intro" | "question" | "thanks" | "message" | "done" | "pending-review";
 
-const initialMessageState: SubmitResult = { ok: false };
+const DRAFT_KEY = "cm2_message_draft";
 
 const fadeSlide = {
   initial: { opacity: 0, y: 16 },
@@ -25,24 +25,94 @@ const fadeSlide = {
 
 export default function SurveyFlow() {
   const { cm2 } = siteConfig;
+  const router = useRouter();
   const [stage, setStage] = useState<Stage>("intro");
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<SurveyAnswers>(emptySurveyAnswers);
   const [surveyError, setSurveyError] = useState<string | undefined>();
   const [isSubmittingSurvey, startSurveyTransition] = useTransition();
 
+  const [messageName, setMessageName] = useState("");
+  const [messageText, setMessageText] = useState("");
+  const [messageError, setMessageError] = useState<string | undefined>();
+  const [postedMessageId, setPostedMessageId] = useState<string | undefined>();
+  const { submitWithRetry, pending: isMessagePending } = useSubmitWithRetry();
+
   const formRef = useRef<HTMLFormElement>(null);
-  const [messageState, messageAction, isMessagePending] = useActionState(
-    async (prevState: SubmitResult, formData: FormData) => {
-      const result = await submitMessage(prevState, formData);
-      if (result.ok) {
-        formRef.current?.reset();
-        setStage("done");
+
+  // Restore an unsent draft (e.g. the tab was closed mid-submit) so a guest
+  // never has to retype their opinion.
+  useEffect(() => {
+    function restoreDraft() {
+      if (typeof window === "undefined") return;
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      try {
+        const draft = JSON.parse(raw) as { name: string; message: string };
+        setMessageName(draft.name);
+        setMessageText(draft.message);
+      } catch {
+        localStorage.removeItem(DRAFT_KEY);
       }
-      return result;
-    },
-    initialMessageState
-  );
+    }
+    restoreDraft();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!messageName && !messageText) {
+      localStorage.removeItem(DRAFT_KEY);
+      return;
+    }
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({ name: messageName, message: messageText }));
+  }, [messageName, messageText]);
+
+  async function handleMessageSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setMessageError(undefined);
+    const result = await submitWithRetry(messageName, messageText);
+
+    if (!result.ok) {
+      setMessageError(result.error);
+      return;
+    }
+
+    localStorage.removeItem(DRAFT_KEY);
+    formRef.current?.reset();
+    setPostedMessageId(result.id);
+
+    if (result.status === "pending") {
+      // Flagged content is invisible on the public feed until a moderator
+      // approves it, so it can't honestly get the "you're live!" treatment.
+      setStage("pending-review");
+      return;
+    }
+
+    if (result.id && typeof window !== "undefined") {
+      sessionStorage.setItem(
+        "cm2_optimistic_message",
+        JSON.stringify({
+          id: result.id,
+          name: messageName.trim(),
+          message: messageText.trim(),
+          status: "approved",
+          created_at: new Date().toISOString(),
+        })
+      );
+    }
+    setStage("done");
+  }
+
+  // Automatic "you're on the wall" redirect — no extra tap. A brief flash of
+  // the confirmation heading plays first, then we hand off to /wall, which
+  // picks up the optimistic draft above and shows the confetti welcome.
+  useEffect(() => {
+    if (stage !== "done") return;
+    const id = setTimeout(() => {
+      router.push(postedMessageId ? `/wall?highlight=${postedMessageId}` : "/wall");
+    }, 650);
+    return () => clearTimeout(id);
+  }, [stage, postedMessageId, router]);
 
   const currentQuestion = surveyQuestions[questionIndex];
   const currentAnswered = currentQuestion ? isQuestionAnswered(currentQuestion, answers) : false;
@@ -91,13 +161,6 @@ export default function SurveyFlow() {
 
   function goBack() {
     if (questionIndex > 0) setQuestionIndex((i) => i - 1);
-  }
-
-  function startOver() {
-    setAnswers(emptySurveyAnswers);
-    setQuestionIndex(0);
-    setSurveyError(undefined);
-    setStage("intro");
   }
 
   return (
@@ -238,7 +301,7 @@ export default function SurveyFlow() {
             <h1 className={styles.title}>{siteConfig.eventTitle}</h1>
             <p className={styles.tagline}>{siteConfig.tagline}</p>
 
-            <form ref={formRef} action={messageAction} className={styles.form}>
+            <form ref={formRef} onSubmit={handleMessageSubmit} className={styles.form}>
               <div>
                 <label className={styles.label} htmlFor="name">
                   Your name
@@ -251,6 +314,8 @@ export default function SurveyFlow() {
                   maxLength={siteConfig.maxNameLength}
                   placeholder="Jordan"
                   autoComplete="name"
+                  value={messageName}
+                  onChange={(e) => setMessageName(e.target.value)}
                   required
                 />
               </div>
@@ -265,11 +330,13 @@ export default function SurveyFlow() {
                   className={styles.textarea}
                   maxLength={siteConfig.maxMessageLength}
                   placeholder="What's on your mind?"
+                  value={messageText}
+                  onChange={(e) => setMessageText(e.target.value)}
                   required
                 />
               </div>
 
-              {messageState.error && <p className={styles.error}>{messageState.error}</p>}
+              {messageError && <p className={styles.error}>{messageError}</p>}
 
               <motion.button
                 type="submit"
@@ -293,15 +360,27 @@ export default function SurveyFlow() {
             >
               Your voice is on the wall! 🎉
             </motion.h1>
-            <p className={styles.introText}>Look up at the big screen — you&rsquo;re on it!</p>
-            <Link
-              href={messageState.id ? `/wall?highlight=${messageState.id}` : "/wall"}
-              className={styles.watchWallButton}
+            <p className={styles.introText}>Taking you to the Live Wall&hellip;</p>
+          </motion.div>
+        )}
+
+        {stage === "pending-review" && (
+          <motion.div key="pending-review" className={styles.card} {...fadeSlide}>
+            <h1 className={styles.title}>Thanks — under review</h1>
+            <p className={styles.introText}>
+              Your message needs a quick look before it hits the big screen. It&rsquo;ll show up on the Live Wall
+              once it&rsquo;s approved.
+            </p>
+            <button
+              type="button"
+              className={styles.backButton}
+              onClick={() => {
+                setMessageName("");
+                setMessageText("");
+                setStage("intro");
+              }}
             >
-              <Tv size={18} /> Watch the Live Wall <ArrowRight size={16} />
-            </Link>
-            <button type="button" className={styles.backButton} onClick={startOver}>
-              Submit another response
+              Done
             </button>
           </motion.div>
         )}

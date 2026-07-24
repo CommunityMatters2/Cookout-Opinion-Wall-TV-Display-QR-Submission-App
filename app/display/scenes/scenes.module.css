@@ -338,9 +338,45 @@
 }
 
 .timelineCard {
+  position: relative;
   padding: 14px 14px 16px;
   min-height: 150px;
   width: 100%;
+}
+
+.timelineDotCurrent {
+  background: var(--gradient-sunset);
+  box-shadow: 0 0 0 2px var(--accent-gold), var(--glow-amber);
+  animation: timelineCurrentPulse 2.6s ease-in-out infinite;
+}
+
+.timelineCardCurrent {
+  box-shadow: 0 0 0 2px var(--accent-gold), var(--glow-amber);
+  animation: timelineCurrentPulse 2.6s ease-in-out infinite;
+}
+
+@keyframes timelineCurrentPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 2px var(--accent-gold), var(--glow-amber);
+  }
+  50% {
+    box-shadow: 0 0 0 3px var(--accent-gold), 0 0 80px rgba(245, 166, 35, 0.55);
+  }
+}
+
+.timelineCurrentBadge {
+  position: absolute;
+  top: -14px;
+  right: 14px;
+  background: var(--gradient-sunset);
+  color: #1a0e00;
+  font-weight: 800;
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--glow-amber);
 }
 
 .timelineTitle {

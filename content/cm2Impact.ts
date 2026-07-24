@@ -29,10 +29,25 @@ export const missionQuote = {
 export const missionStatement =
   "Our mission is to initiate communal growth by organizing events and establishing programs with local organizations for residents and youth with common goals that sparks community engagement.";
 
+export type Program = { name: string; ageRange?: string; description?: string };
+
+// "Projection - 2026 · Programs Expand"
+export const programs2026: Program[] = [
+  { name: "Spark Academy", ageRange: "Ages 7–12" },
+  { name: "IGNITE Academy", ageRange: "Ages 13–19" },
+  { name: "Extraordinary Youth Summer Camp" },
+  { name: "TEE TIME Golf Program" },
+  { name: "Swim With A Friend" },
+  { name: "NextGen Career Connection" },
+  { name: "Pathways to Workforce Success Initiative", ageRange: "Ages 18–24" },
+  { name: "CM2 Talk Podcast" },
+];
+
 export type TimelineMilestone = {
   year: string;
   title: string;
   items: string[];
+  isCurrent?: boolean;
 };
 
 export const growthTimeline: TimelineMilestone[] = [
@@ -66,6 +81,12 @@ export const growthTimeline: TimelineMilestone[] = [
     title: "Future Vision",
     items: ["Immersive after-school program for youth ages 13–19"],
   },
+  {
+    year: "2026",
+    title: "Programs Expand",
+    items: programs2026.map((p) => p.name),
+    isCurrent: true,
+  },
 ];
 
 export type ImpactNumber = { value: string; label: string; detail?: string };
@@ -74,7 +95,7 @@ export type ImpactNumber = { value: string; label: string; detail?: string };
 export const impactNumbers: ImpactNumber[] = [
   { value: "1,000+", label: "Youth Served", detail: "Direct program participants" },
   { value: "10,000", label: "Meals Delivered", detail: "Let's Feed PK · COVID-19 Response" },
-  { value: "$350K+", label: "Youth Employment Invested", detail: "OTDA YEP & SYEP programs" },
+  { value: "$470K+", label: "Youth Employment Invested", detail: "OTDA YEP & SYEP programs" },
   { value: "70+", label: "Collaborations & Partnerships" },
   { value: "13", label: "City-Wide Cleanups & Events" },
   { value: "2,000+", label: "Cleanup Volunteers", detail: "Since 2018 across all events" },
@@ -99,20 +120,6 @@ function chunkInto<T>(items: T[], pageCount: number): T[][] {
 export const impactNumberPages: ImpactNumber[][] = chunkInto(impactNumbers, 3);
 
 export const photoMomentCaption = "CM2 Summer Cookout · Poughkeepsie, NY";
-
-export type Program = { name: string; ageRange?: string; description?: string };
-
-// "Projection - 2026 · Programs Expand"
-export const programs2026: Program[] = [
-  { name: "Spark Academy", ageRange: "Ages 7–12" },
-  { name: "IGNITE Academy", ageRange: "Ages 13–19" },
-  { name: "Extraordinary Youth Summer Camp" },
-  { name: "TEE TIME Golf Program" },
-  { name: "Swim With A Friend" },
-  { name: "NextGen Career Connection" },
-  { name: "Pathways to Workforce Success Initiative", ageRange: "Ages 18–24" },
-  { name: "CM2 Talk Podcast" },
-];
 
 export const yearRoundHours = {
   schoolYear: {

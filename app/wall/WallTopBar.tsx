@@ -20,6 +20,9 @@ export default function WallTopBar() {
         <span className={styles.topBarLiveDot} aria-hidden="true" />
         LIVE <strong>{messages.length}</strong>
       </span>
+      <Link href="/" className={styles.postAnotherLink}>
+        + Post an opinion
+      </Link>
       <DonateButton compact />
     </header>
   );

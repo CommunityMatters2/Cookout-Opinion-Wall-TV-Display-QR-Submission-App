@@ -2,12 +2,13 @@
 
 import { createContext, useContext, type ReactNode } from "react";
 import type { Message } from "@/types/message";
-import { useLiveOpinions } from "@/lib/hooks/useLiveOpinions";
+import { useLiveOpinions, type ConnectionStatus } from "@/lib/hooks/useLiveOpinions";
 
 type LiveOpinionsValue = {
   messages: Message[];
   incomingMessage: Message | null;
   consumeIncoming: () => void;
+  connectionStatus: ConnectionStatus;
 };
 
 const LiveOpinionsContext = createContext<LiveOpinionsValue | null>(null);

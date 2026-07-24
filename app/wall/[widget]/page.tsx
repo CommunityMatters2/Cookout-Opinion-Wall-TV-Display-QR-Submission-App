@@ -7,6 +7,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getWidget } from "@/lib/widgets/registry";
 import ShareButton from "@/app/wall/ShareButton";
+import { siteConfig } from "@/config/site";
 import styles from "../wall.module.css";
 
 const SWIPE_CLOSE_THRESHOLD = 90;
@@ -49,7 +50,13 @@ export default function WallWidgetPage({ params }: { params: Promise<{ widget: s
         <Link href="/wall" transitionTypes={["nav-back"]} className={styles.detailBack}>
           <ArrowLeft size={18} /> Back
         </Link>
-        <ShareButton title={`CM2 Live Wall — ${widget.title}`} url={shareUrl} />
+        <ShareButton
+          title={`${siteConfig.shareTitle} — ${widget.title}`}
+          url={shareUrl}
+          text={siteConfig.shareText}
+          targetType="widget"
+          targetId={widget.id}
+        />
       </div>
       <ViewTransition name={`widget-${widget.id}`}>
         <div className={styles.detailContent}>

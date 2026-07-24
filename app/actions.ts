@@ -1,15 +1,18 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { containsBlockedWord } from "@/lib/wordFilter";
-import { siteConfig } from "@/config/site";
+import { submitMessage as submitMessageCore } from "@/lib/submitMessage";
+import { DEVICE_ID_COOKIE } from "@/lib/deviceId";
 import { surveyQuestions, isQuestionAnswered } from "@/lib/surveyQuestions";
 import type { SurveyAnswers } from "@/types/survey";
+import type { MessageStatus } from "@/types/message";
 
 export type SubmitResult = {
   ok: boolean;
   error?: string;
   id?: string;
+  status?: MessageStatus;
 };
 
 export type SurveyResult = {
@@ -44,35 +47,11 @@ export async function submitSurvey(answers: SurveyAnswers): Promise<SurveyResult
   return { ok: true };
 }
 
-export async function submitMessage(
-  _prevState: SubmitResult,
-  formData: FormData
-): Promise<SubmitResult> {
+export async function submitMessage(_prevState: SubmitResult, formData: FormData): Promise<SubmitResult> {
   const name = String(formData.get("name") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
+  const cookieStore = await cookies();
+  const deviceId = cookieStore.get(DEVICE_ID_COOKIE)?.value;
 
-  if (!name) {
-    return { ok: false, error: "Please enter your name." };
-  }
-  if (!message) {
-    return { ok: false, error: "Please enter a message." };
-  }
-  if (name.length > siteConfig.maxNameLength) {
-    return { ok: false, error: `Name must be ${siteConfig.maxNameLength} characters or less.` };
-  }
-  if (message.length > siteConfig.maxMessageLength) {
-    return { ok: false, error: `Message must be ${siteConfig.maxMessageLength} characters or less.` };
-  }
-  if (containsBlockedWord(name) || containsBlockedWord(message)) {
-    return { ok: false, error: "Please keep it cookout-friendly! 🌭" };
-  }
-
-  const supabase = createServerSupabaseClient();
-  const { data, error } = await supabase.from("messages").insert({ name, message }).select("id").single();
-
-  if (error) {
-    return { ok: false, error: "Something went wrong, please try again." };
-  }
-
-  return { ok: true, id: data?.id };
+  return submitMessageCore(name, message, deviceId);
 }

@@ -7,6 +7,11 @@ import shared from "../display.module.css";
 import styles from "./scenes.module.css";
 
 const MIN_SCROLL_ITEMS = 10;
+// The marquee duplicates its source list to build a seamless scroll loop —
+// capping the source independently of the stats-accurate 150-message cap
+// (useLiveOpinions.ts) keeps the loop's DOM node count bounded even during a
+// packed event.
+const MARQUEE_MAX_SOURCE = 40;
 const PIXELS_PER_SECOND = 28;
 const SPOTLIGHT_INTERVAL_MS = 9000;
 const SPOTLIGHT_VISIBLE_MS = 4000;
@@ -69,7 +74,7 @@ export default function LiveOpinionsScene({
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const offsetRef = useRef(0);
-  const loopItems = useMemo(() => buildLoopItems(messages), [messages]);
+  const loopItems = useMemo(() => buildLoopItems(messages.slice(0, MARQUEE_MAX_SOURCE)), [messages]);
   const recentIds = useMemo(() => new Set(messages.slice(0, RECENT_COUNT).map((m) => m.id)), [messages]);
 
   const [fillerSpotlight, setFillerSpotlight] = useState<Message | null>(null);

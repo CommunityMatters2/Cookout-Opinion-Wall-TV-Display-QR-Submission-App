@@ -1,13 +1,6 @@
 import type { ComponentType } from "react";
+import dynamic from "next/dynamic";
 import { Vote, TrendingUp, CalendarClock, LayoutGrid, Tent, PiggyBank, HeartPulse, Camera, type LucideIcon } from "lucide-react";
-import CommunityVoiceScene from "@/app/display/scenes/CommunityVoiceScene";
-import GrowthTimelineScene from "@/app/display/scenes/GrowthTimelineScene";
-import SignatureProgramsScene from "@/app/display/scenes/SignatureProgramsScene";
-import SummerCampScene from "@/app/display/scenes/SummerCampScene";
-import ROIScene from "@/app/display/scenes/ROIScene";
-import WhySummerMattersScene from "@/app/display/scenes/WhySummerMattersScene";
-import ImpactDetail from "@/app/display/widgets/ImpactDetail";
-import PhotoGalleryDetail from "@/app/display/widgets/PhotoGalleryDetail";
 import CommunityVoiceSummary from "@/app/display/widgets/CommunityVoiceSummary";
 import ImpactSummary from "@/app/display/widgets/ImpactSummary";
 import JourneySummary from "@/app/display/widgets/JourneySummary";
@@ -35,6 +28,18 @@ export type WidgetDef = {
   Summary: ComponentType;
   Detail: ComponentType;
 };
+
+// Detail scenes are dynamically imported (code-split, loaded on demand)
+// rather than statically imported — /wall and /display otherwise ship all 8
+// scenes' JS up front even though only one Detail is ever shown at a time.
+const CommunityVoiceScene = dynamic(() => import("@/app/display/scenes/CommunityVoiceScene"), { ssr: false });
+const GrowthTimelineScene = dynamic(() => import("@/app/display/scenes/GrowthTimelineScene"), { ssr: false });
+const SignatureProgramsScene = dynamic(() => import("@/app/display/scenes/SignatureProgramsScene"), { ssr: false });
+const SummerCampScene = dynamic(() => import("@/app/display/scenes/SummerCampScene"), { ssr: false });
+const ROIScene = dynamic(() => import("@/app/display/scenes/ROIScene"), { ssr: false });
+const WhySummerMattersScene = dynamic(() => import("@/app/display/scenes/WhySummerMattersScene"), { ssr: false });
+const ImpactDetail = dynamic(() => import("@/app/display/widgets/ImpactDetail"), { ssr: false });
+const PhotoGalleryDetail = dynamic(() => import("@/app/display/widgets/PhotoGalleryDetail"), { ssr: false });
 
 // The single source of truth for the 8 widgets — both the TV Explore Zone grid
 // and the mobile stacked cards / `/wall/[widget]` deep links read from this one

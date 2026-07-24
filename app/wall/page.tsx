@@ -5,6 +5,9 @@ import { useSearchParams } from "next/navigation";
 import { widgetRegistry } from "@/lib/widgets/registry";
 import WallLiveFeed from "@/app/wall/WallLiveFeed";
 import WallWidgetCard from "@/app/wall/WallWidgetCard";
+import ConfettiWelcome from "@/app/wall/ConfettiWelcome";
+import InsiderPitchCard from "@/app/wall/InsiderPitchCard";
+import ShareCTA from "@/app/wall/ShareCTA";
 import styles from "./wall.module.css";
 
 export default function WallHomePage() {
@@ -21,7 +24,10 @@ export default function WallHomePage() {
 
   return (
     <div className={styles.homeRoot}>
+      <ConfettiWelcome />
       <WallLiveFeed />
+      <InsiderPitchCard />
+      <ShareCTA />
 
       <div className={styles.widgetStack}>
         {widgetRegistry.map((widget, i) => (

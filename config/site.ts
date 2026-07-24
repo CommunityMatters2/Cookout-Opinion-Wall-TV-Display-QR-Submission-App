@@ -3,6 +3,12 @@ export const siteConfig = {
   eventTitle: "CM2 Summer Cookout",
   tagline: "Tell us what you think! 🌭☀️",
   confirmationMessage: "Thanks! Your message just hit the big screen 🎉",
+
+  // Used only on share surfaces (OG/Twitter meta tags, the share button's
+  // pre-written text) — the on-page hero keeps the "CM2 Summer Cookout" name.
+  shareTitle: "Community Voice: Shape Poughkeepsie",
+  shareText:
+    "I just helped shape Poughkeepsie's next community center at the CM2 Summer Cookout! Add your voice 👉",
   colors: {
     background: "#fff4dd",
     accent: "#ff6b35",
@@ -45,7 +51,7 @@ export const siteConfig = {
     stats: [
       { value: "1,000+", label: "Youth Served" },
       { value: "10,000", label: "Meals Delivered" },
-      { value: "$350K+", label: "Youth Employment Invested" },
+      { value: "$470K+", label: "Youth Employment Invested" },
       { value: "70+", label: "Collaborations & Partnerships" },
     ],
     // Rotating hype lines for the display wall's animated text panel.

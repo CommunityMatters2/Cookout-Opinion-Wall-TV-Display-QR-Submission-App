@@ -235,6 +235,18 @@
   border-radius: var(--radius-pill);
 }
 
+.feedPendingBadge {
+  display: inline-block;
+  margin-bottom: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--stage-text-secondary);
+  background: var(--stage-surface);
+  border: 1px dashed var(--stage-border);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+}
+
 .feedBubbleName {
   font-weight: 700;
   font-size: 0.85rem;
@@ -247,6 +259,155 @@
   line-height: 1.35;
   color: var(--stage-text);
   word-break: break-word;
+}
+
+.reactionBar {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.reactionButton {
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 6px 9px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--stage-border);
+  border-radius: var(--radius-pill);
+}
+
+/* ---------- Share CTA ---------- */
+
+.shareCta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 16px 18px;
+  background: var(--stage-surface);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--stage-border);
+  border-radius: var(--radius-xl);
+}
+
+.shareCtaText {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--stage-text);
+}
+
+/* ---------- CM2 Insider ---------- */
+
+.insiderCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 20px;
+  background: var(--stage-surface);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(245, 166, 35, 0.35);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+}
+
+.insiderTitle {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.15rem;
+  color: var(--accent-gold);
+}
+
+.insiderBenefits {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.insiderBenefits li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--stage-text-secondary);
+}
+
+.insiderBenefits li svg {
+  flex-shrink: 0;
+  color: var(--accent-gold);
+}
+
+.insiderForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.insiderInput {
+  width: 100%;
+  font-size: 1rem;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--stage-border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--stage-text);
+  font-family: inherit;
+}
+
+.insiderInput::placeholder {
+  color: var(--stage-text-muted);
+}
+
+.insiderInput:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+}
+
+.insiderError {
+  color: #ff8a80;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.insiderSubmit {
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a0e00;
+  background: var(--gradient-sunset);
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glow-amber);
+}
+
+.insiderSubmit:disabled {
+  opacity: 0.6;
+}
+
+.insiderWelcome {
+  font-weight: 700;
+  color: var(--stage-text);
+}
+
+.insiderAccountLink {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--accent-gold);
+}
+
+.insiderBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #1a0e00;
+  background: var(--gradient-sunset);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  margin-left: 6px;
+  vertical-align: middle;
 }
 
 /* ---------- Widget cards ---------- */
@@ -362,9 +523,78 @@
   justify-content: center;
 }
 
+/* ---------- Confetti welcome ---------- */
+
+.confettiRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confettiPiece {
+  position: absolute;
+  top: -5%;
+  border-radius: 2px;
+  animation-name: confettiFall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--drift, 0), 115vh) rotate(var(--rotate, 180deg));
+    opacity: 0.9;
+  }
+}
+
+.confettiToastWrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 201;
+  display: flex;
+  justify-content: center;
+  padding-top: max(16px, env(safe-area-inset-top));
+  pointer-events: none;
+}
+
+.confettiToast {
+  background: var(--gradient-sunset);
+  color: #1a0e00;
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 12px 22px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--glow-amber);
+}
+
+/* ---------- Post-another-opinion link ---------- */
+
+.postAnotherLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  font-size: 0.72rem;
+  color: var(--stage-text-secondary);
+  white-space: nowrap;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .topBarLiveDot,
   .liveFeedDot {
     animation: none;
+  }
+
+  .confettiPiece {
+    animation: none;
+    opacity: 0;
   }
 }

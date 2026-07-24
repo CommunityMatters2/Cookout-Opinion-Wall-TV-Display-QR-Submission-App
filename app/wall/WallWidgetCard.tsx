@@ -3,12 +3,15 @@
 import type { CSSProperties } from "react";
 import { ViewTransition } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import type { WidgetDef } from "@/lib/widgets/registry";
+import { useTiltHover } from "@/lib/hooks/useTiltHover";
 import styles from "./wall.module.css";
 
 export default function WallWidgetCard({ widget, anchorId }: { widget: WidgetDef; anchorId?: string }) {
   const Summary = widget.Summary;
   const Icon = widget.icon;
+  const tilt = useTiltHover();
 
   return (
     <div id={anchorId} className={styles.widgetCardAnchor}>
@@ -17,9 +20,14 @@ export default function WallWidgetCard({ widget, anchorId }: { widget: WidgetDef
         transitionTypes={["nav-forward"]}
         className={styles.widgetCard}
         style={{ "--card-accent": widget.accent } as CSSProperties}
+        onPointerMove={tilt.onPointerMove}
+        onPointerLeave={tilt.onPointerLeave}
       >
         <ViewTransition name={`widget-${widget.id}`}>
-          <div className={styles.widgetCardInner}>
+          <motion.div
+            className={styles.widgetCardInner}
+            style={{ rotateX: tilt.rotateX, rotateY: tilt.rotateY, transformPerspective: 800 }}
+          >
             <div className={styles.widgetCardHeader}>
               <span className={styles.widgetCardIcon}>
                 <Icon size={18} strokeWidth={2} />
@@ -32,7 +40,7 @@ export default function WallWidgetCard({ widget, anchorId }: { widget: WidgetDef
             <div className={styles.widgetCardSummary}>
               <Summary />
             </div>
-          </div>
+          </motion.div>
         </ViewTransition>
       </Link>
     </div>

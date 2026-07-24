@@ -51,6 +51,29 @@
   --glow-teal: 0 0 60px rgba(30, 159, 179, 0.28);
   --shadow-card: 0 24px 60px rgba(0, 0, 0, 0.5);
   --shadow-float: 0 12px 32px rgba(0, 0, 0, 0.3);
+
+  /* Light "Golden Hour" tokens — used only by the Hub landing page and the
+     survey flow (Hub.module.css / SurveyFlow.module.css). /display and /wall
+     stay on the dark --stage-* tokens above; this is a separate namespace on
+     purpose so the two palettes can never bleed into each other. */
+  --hub-bg-gradient: linear-gradient(135deg, #fff4dd 0%, #ffe3c2 45%, #cdeffa 100%);
+  --hub-bg-base: #ffe3c2;
+  --hub-text: var(--color-text);
+  --hub-text-secondary: rgba(43, 29, 14, 0.72);
+  --hub-text-muted: rgba(43, 29, 14, 0.5);
+  --hub-surface: rgba(255, 255, 255, 0.6);
+  --hub-border: rgba(43, 29, 14, 0.12);
+  --hub-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+@keyframes hubGradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 html {

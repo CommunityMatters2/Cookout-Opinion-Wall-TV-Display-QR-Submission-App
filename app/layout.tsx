@@ -15,8 +15,20 @@ const anton = Anton({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SUBMIT_URL || "http://localhost:3000"),
   title: siteConfig.eventTitle,
   description: siteConfig.tagline,
+  openGraph: {
+    title: siteConfig.shareTitle,
+    description: siteConfig.tagline,
+    siteName: siteConfig.eventTitle,
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.shareTitle,
+    description: siteConfig.tagline,
+  },
 };
 
 export default function RootLayout({
@@ -43,6 +55,11 @@ export default function RootLayout({
         } as React.CSSProperties
       }
     >
+      <head>
+        {process.env.NEXT_PUBLIC_SUPABASE_URL && (
+          <link rel="preconnect" href={process.env.NEXT_PUBLIC_SUPABASE_URL} />
+        )}
+      </head>
       <body>{children}</body>
     </html>
   );

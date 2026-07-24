@@ -1,0 +1,118 @@
+.page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 16px 40px;
+  background: var(--stage-bg);
+  color: var(--stage-text);
+}
+
+.loading {
+  text-align: center;
+  padding: 40px 0;
+  color: var(--stage-text-secondary);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px 20px;
+  background: var(--stage-surface);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--stage-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+}
+
+.welcome {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: var(--accent-gold);
+}
+
+.title {
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.body {
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: var(--stage-text-secondary);
+}
+
+.featuredBadge {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #1a0e00;
+  background: var(--gradient-sunset);
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--glow-amber);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sectionTitle {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--stage-text);
+}
+
+.opinionList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.opinionItem {
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--stage-border);
+  border-radius: var(--radius-md);
+}
+
+.opinionText {
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: var(--stage-text);
+}
+
+.benefitList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.benefitList li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--stage-text-secondary);
+}
+
+.benefitList li svg {
+  flex-shrink: 0;
+  color: var(--accent-gold);
+}
+
+.backLink {
+  align-self: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--stage-text-secondary);
+}

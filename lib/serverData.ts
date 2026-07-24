@@ -13,12 +13,23 @@ export async function getInitialMessages(): Promise<Message[]> {
   const { data, error } = await supabase
     .from("messages")
     .select("*")
-    .eq("approved", true)
+    .eq("status", "approved")
     .order("created_at", { ascending: false })
     .limit(150);
 
   if (error || !data) return [];
   return data as Message[];
+}
+
+// Uncapped total, unlike getInitialMessages()'s 150-row cap — milestone
+// celebrations (25/50/100…) need the real count, not the display-limited one.
+export async function getMessageCount(): Promise<number> {
+  const supabase = createBrowserSupabaseClient();
+  const { count } = await supabase
+    .from("messages")
+    .select("id", { count: "exact", head: true })
+    .eq("status", "approved");
+  return count ?? 0;
 }
 
 export function getSlideshowPhotos(): string[] {

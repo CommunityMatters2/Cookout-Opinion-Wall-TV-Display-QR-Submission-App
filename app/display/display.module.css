@@ -178,10 +178,27 @@
 }
 
 .liveCount {
+  display: inline-block;
   font-weight: 700;
   font-size: 0.85rem;
   color: var(--accent-gold);
   white-space: nowrap;
+}
+
+.liveCountBump {
+  animation: liveCountBump 0.4s ease-out;
+}
+
+@keyframes liveCountBump {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .tickerTrack {
@@ -551,5 +568,185 @@
 
   .widgetGrid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- Connection pip ---------- */
+
+.connectionPip {
+  position: fixed;
+  top: clamp(14px, 2vw, 24px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 170;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(8, 11, 18, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--stage-border);
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--stage-text-secondary);
+}
+
+.connectionPipDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f5a623;
+  animation: connectionPipPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes connectionPipPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* ---------- Milestone banner ---------- */
+
+.milestoneOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.milestoneBanner {
+  background: var(--gradient-sunset);
+  color: #1a0e00;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+  padding: 28px 56px;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 0 140px rgba(245, 166, 35, 0.55);
+  text-align: center;
+}
+
+/* ---------- Golden Opinion spotlight ---------- */
+
+.goldenOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  pointer-events: none;
+}
+
+.goldenCard {
+  position: relative;
+  max-width: 760px;
+  width: 100%;
+  padding: 48px 56px;
+  border-radius: var(--radius-xl);
+  background: var(--stage-surface-solid);
+  border: 1px solid var(--accent-gold);
+  box-shadow: 0 0 120px rgba(245, 166, 35, 0.45);
+  overflow: hidden;
+  text-align: center;
+}
+
+.goldenCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transform: skewX(-20deg);
+  animation: goldenShimmer 3.2s ease-in-out infinite;
+}
+
+@keyframes goldenShimmer {
+  0% {
+    left: -60%;
+  }
+  60%,
+  100% {
+    left: 130%;
+  }
+}
+
+.goldenBadge {
+  display: inline-block;
+  margin-bottom: 18px;
+  background: var(--gradient-sunset);
+  color: #1a0e00;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  padding: 6px 18px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--glow-amber);
+}
+
+.goldenName {
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--accent-gold);
+  margin-bottom: 10px;
+}
+
+.goldenMessage {
+  font-size: 2rem;
+  line-height: 1.35;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* ---------- Reaction particles ---------- */
+
+.reactionParticleLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 140;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.reactionParticle {
+  position: absolute;
+  bottom: 0;
+  font-size: 2.4rem;
+  animation: reactionFloat 3.2s ease-out forwards;
+}
+
+@keyframes reactionFloat {
+  0% {
+    transform: translateY(0) scale(0.6);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-90vh) scale(1.1);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .goldenCard::before,
+  .reactionParticle {
+    animation: none;
+  }
+
+  .reactionParticle {
+    opacity: 0;
   }
 }

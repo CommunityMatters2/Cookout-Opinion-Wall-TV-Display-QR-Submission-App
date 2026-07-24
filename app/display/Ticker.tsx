@@ -2,30 +2,43 @@
 
 import { useEffect, useRef, useState } from "react";
 import { siteConfig } from "@/config/site";
+import { tickerFunLines } from "@/content/tickerLines";
 import styles from "./display.module.css";
 
 export default function Ticker({ liveCount }: { liveCount: number }) {
   const { cm2 } = siteConfig;
   const [displayCount, setDisplayCount] = useState(liveCount);
+  const [bump, setBump] = useState(false);
   const prevCount = useRef(liveCount);
 
   useEffect(() => {
-    if (liveCount === prevCount.current) return;
-    const from = prevCount.current;
-    const to = liveCount;
-    prevCount.current = to;
-    const start = performance.now();
-    const DURATION = 700;
     let raf: number;
+    let bumpTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
-    function tick(now: number) {
-      const progress = Math.min(1, (now - start) / DURATION);
-      setDisplayCount(Math.round(from + (to - from) * progress));
-      if (progress < 1) raf = requestAnimationFrame(tick);
+    function animateToLiveCount() {
+      if (liveCount === prevCount.current) return;
+      const from = prevCount.current;
+      const to = liveCount;
+      prevCount.current = to;
+      const start = performance.now();
+      const DURATION = 700;
+
+      setBump(true);
+      bumpTimeoutId = setTimeout(() => setBump(false), 400);
+
+      function tick(now: number) {
+        const progress = Math.min(1, (now - start) / DURATION);
+        setDisplayCount(Math.round(from + (to - from) * progress));
+        if (progress < 1) raf = requestAnimationFrame(tick);
+      }
+      raf = requestAnimationFrame(tick);
     }
+    animateToLiveCount();
 
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(bumpTimeoutId);
+    };
   }, [liveCount]);
 
   return (
@@ -35,7 +48,9 @@ export default function Ticker({ liveCount }: { liveCount: number }) {
           <span className={styles.liveDot} />
           LIVE
         </span>
-        <span className={styles.liveCount}>{displayCount} shared so far</span>
+        <span className={`${styles.liveCount} ${bump ? styles.liveCountBump : ""}`}>
+          {displayCount} shared so far
+        </span>
       </div>
       <div className={styles.tickerTrack}>
         <div className={styles.tickerScroll}>
@@ -47,7 +62,10 @@ export default function Ticker({ liveCount }: { liveCount: number }) {
                   {hype.headline} — {hype.sub} &nbsp;•&nbsp;{" "}
                 </span>
               ))}
-              {cm2.impactFact} &nbsp;•&nbsp; Scan the QR to share your opinion &nbsp;•&nbsp;
+              {cm2.impactFact} &nbsp;•&nbsp; Scan the QR to share your opinion &nbsp;•&nbsp;{" "}
+              {tickerFunLines.map((line, k) => (
+                <span key={k}>{line} &nbsp;•&nbsp; </span>
+              ))}
             </span>
           ))}
         </div>

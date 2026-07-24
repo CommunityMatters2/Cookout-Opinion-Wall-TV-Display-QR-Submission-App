@@ -11,7 +11,9 @@ export default function GrowthTimelineScene() {
   return (
     <div className={`${styles.sceneRoot} ${styles.timelineScene}`}>
       <div className={styles.headerBlock}>
-        <p className={shared.kicker}>Growth Line · 2018 – 2025</p>
+        <p className={shared.kicker}>
+          Growth Line · {growthTimeline[0].year} – {growthTimeline[growthTimeline.length - 1].year}
+        </p>
         <h1 className={shared.headline}>Our Journey</h1>
       </div>
 
@@ -37,9 +39,14 @@ export default function GrowthTimelineScene() {
                 show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 260, damping: 20 } },
               }}
             >
-              <span className={styles.timelineDot} />
+              <span className={`${styles.timelineDot} ${milestone.isCurrent ? styles.timelineDotCurrent : ""}`} />
               <span className={styles.timelineYear}>{milestone.year}</span>
-              <div className={`${shared.glassPanel} ${styles.timelineCard}`}>
+              <div
+                className={`${shared.glassPanel} ${styles.timelineCard} ${
+                  milestone.isCurrent ? styles.timelineCardCurrent : ""
+                }`}
+              >
+                {milestone.isCurrent && <span className={styles.timelineCurrentBadge}>This Year</span>}
                 <p className={styles.timelineTitle}>{milestone.title}</p>
                 <ul className={styles.timelineItems}>
                   {milestone.items.slice(0, MAX_ITEMS_SHOWN).map((item) => (
