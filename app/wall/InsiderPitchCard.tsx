@@ -3,14 +3,17 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { insiderBenefits } from "@/lib/insiderBenefits";
-import InsiderSignup from "./InsiderSignup";
-import styles from "./wall.module.css";
+import InsiderSignup, { type InsiderFormStyles } from "./InsiderSignup";
+import defaultStyles from "./wall.module.css";
 
 const ACCOUNT_KEY = "cm2_account_id";
 
-// Lives on /wall home, never in the submit flow, so it can never gate the
-// automatic post-submit redirect (see app/SurveyFlow.tsx).
-export default function InsiderPitchCard() {
+export type InsiderCardStyles = InsiderFormStyles;
+
+// Styles are injectable (default: the dark /wall theme) — also used on the
+// light survey "thanks" screen (app/SurveyFlow.tsx) with its own tokens, so
+// signing up doesn't require ever leaving the survey flow.
+export default function InsiderPitchCard({ styles = defaultStyles }: { styles?: InsiderCardStyles } = {}) {
   const [hasAccount, setHasAccount] = useState<boolean | null>(null);
   const [justSignedUp, setJustSignedUp] = useState(false);
 
@@ -45,7 +48,7 @@ export default function InsiderPitchCard() {
           </li>
         ))}
       </ul>
-      <InsiderSignup onSignedUp={() => setJustSignedUp(true)} />
+      <InsiderSignup onSignedUp={() => setJustSignedUp(true)} styles={styles} />
     </div>
   );
 }

@@ -360,3 +360,102 @@
   background: #111;
 }
 
+/* ---------- CM2 Insider pitch (light-theme variant, passed as a styles
+   prop into the shared InsiderPitchCard/InsiderSignup components) ---------- */
+
+.insiderCard {
+  width: 100%;
+  margin-top: 24px;
+  padding: 20px 22px;
+  background: rgba(255, 209, 102, 0.14);
+  border: 1px solid rgba(245, 166, 35, 0.35);
+  border-radius: var(--radius-lg);
+  text-align: left;
+}
+
+.insiderTitle {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: var(--accent-tangerine);
+  margin-bottom: 10px;
+}
+
+.insiderBenefits {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.insiderBenefits li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  opacity: 0.85;
+}
+
+.insiderBenefits li svg {
+  flex-shrink: 0;
+  color: var(--accent-tangerine);
+}
+
+.insiderForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.insiderInput {
+  width: 100%;
+  font-size: 1rem;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 2px solid #e5d9c4;
+  font-family: inherit;
+  color: var(--color-text);
+  background: #fffefb;
+}
+
+.insiderInput:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.insiderError {
+  color: #b3261e;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.insiderSubmit {
+  padding: 13px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--gradient-sunset);
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 24px rgba(255, 107, 53, 0.3);
+}
+
+.insiderSubmit:disabled {
+  opacity: 0.6;
+}
+
+.insiderWelcome {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.insiderAccountLink {
+  display: inline-block;
+  margin-top: 6px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--accent-tangerine);
+}
+

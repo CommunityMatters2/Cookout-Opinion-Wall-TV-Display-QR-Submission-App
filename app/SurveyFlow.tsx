@@ -10,6 +10,7 @@ import { siteConfig } from "@/config/site";
 import { surveyQuestions, isQuestionAnswered } from "@/lib/surveyQuestions";
 import { emptySurveyAnswers, type SurveyAnswers } from "@/types/survey";
 import QuestionStep from "@/app/QuestionStep";
+import InsiderPitchCard from "@/app/wall/InsiderPitchCard";
 import styles from "./SurveyFlow.module.css";
 
 type Stage = "intro" | "question" | "thanks" | "message" | "done" | "pending-review";
@@ -293,6 +294,8 @@ export default function SurveyFlow() {
             >
               Now, share your cookout opinion →
             </motion.button>
+
+            <InsiderPitchCard styles={styles} />
           </motion.div>
         )}
 

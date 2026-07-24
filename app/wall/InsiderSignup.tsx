@@ -3,12 +3,23 @@
 import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import { createAccount, linkMessageToAccount } from "@/lib/actions/accounts";
-import styles from "./wall.module.css";
+import defaultStyles from "./wall.module.css";
 
 const ACCOUNT_KEY = "cm2_account_id";
 const DRAFT_KEY = "cm2_optimistic_message";
 
-export default function InsiderSignup({ onSignedUp }: { onSignedUp: (accountId: string) => void }) {
+export type InsiderFormStyles = Record<string, string>;
+
+// Styles are injectable (default: the dark /wall theme) so the same signup
+// logic can be reused with the light survey theme (see app/SurveyFlow.tsx)
+// without duplicating the form.
+export default function InsiderSignup({
+  onSignedUp,
+  styles = defaultStyles,
+}: {
+  onSignedUp: (accountId: string) => void;
+  styles?: InsiderFormStyles;
+}) {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [error, setError] = useState<string | undefined>();
