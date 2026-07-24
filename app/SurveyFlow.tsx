@@ -128,8 +128,17 @@ export default function SurveyFlow() {
   const currentAnswered = currentQuestion ? isQuestionAnswered(currentQuestion, answers) : false;
   const progressPercent = Math.round(((questionIndex + 1) / TOTAL_STEPS) * 100);
 
+  // Auto-advance schedules goNext() a beat after the tap so the selected
+  // state is visible first. That delay means the component re-renders
+  // before it fires, so goNext() can't rely on the `answers` closure below
+  // (it would still hold the pre-tap value) — the freshly computed answers
+  // are passed through explicitly instead.
   function setYesNo(key: "visitedBefore" | "cityNeedsCenter", value: "yes" | "no") {
-    setAnswers((prev) => ({ ...prev, [key]: value }));
+    setAnswers((prev) => {
+      const next = { ...prev, [key]: value };
+      setTimeout(() => goNext(next), AUTO_ADVANCE_DELAY_MS);
+      return next;
+    });
   }
 
   function selectOption(
@@ -153,7 +162,7 @@ export default function SurveyFlow() {
     setAnswers((prev) => ({ ...prev, [key]: value }));
   }
 
-  function goNext() {
+  function goNext(latestAnswers: SurveyAnswers = answers) {
     if (questionIndex < surveyQuestions.length - 1) {
       setQuestionIndex((i) => i + 1);
       return;
@@ -163,17 +172,13 @@ export default function SurveyFlow() {
     // then move into the name/opinion step.
     setSurveyError(undefined);
     startSurveyTransition(async () => {
-      const result = await submitSurvey(answers);
+      const result = await submitSurvey(latestAnswers);
       if (result.ok) {
         setQuestionIndex((i) => i + 1);
       } else {
         setSurveyError(result.error);
       }
     });
-  }
-
-  function advanceAfterSelect() {
-    setTimeout(goNext, AUTO_ADVANCE_DELAY_MS);
   }
 
   function goBack() {
@@ -251,7 +256,6 @@ export default function SurveyFlow() {
                     onSelectOption={selectOption}
                     onSetOtherText={setOtherText}
                     onSetText={setText}
-                    onAdvance={advanceAfterSelect}
                   />
 
                   {surveyError && <p className={styles.error}>{surveyError}</p>}
@@ -270,7 +274,7 @@ export default function SurveyFlow() {
                       <motion.button
                         type="button"
                         className={styles.submitButton}
-                        onClick={goNext}
+                        onClick={() => goNext()}
                         disabled={!currentAnswered || isSubmittingSurvey}
                         whileTap={currentAnswered ? { scale: 0.97 } : undefined}
                       >

@@ -12,7 +12,6 @@ export default function QuestionStep({
   onSelectOption,
   onSetOtherText,
   onSetText,
-  onAdvance,
 }: {
   question: SurveyQuestion;
   answers: SurveyAnswers;
@@ -26,7 +25,6 @@ export default function QuestionStep({
     value: string
   ) => void;
   onSetText: (key: "trustAnswer", value: string) => void;
-  onAdvance: () => void;
 }) {
   if (question.type === "yesno") {
     const value = answers[question.key];
@@ -37,10 +35,7 @@ export default function QuestionStep({
             key={option}
             type="button"
             className={`${styles.yesNoButton} ${value === option ? styles.yesNoButtonSelected : ""}`}
-            onClick={() => {
-              onSetYesNo(question.key, option);
-              onAdvance();
-            }}
+            onClick={() => onSetYesNo(question.key, option)}
             whileTap={{ scale: 0.95 }}
           >
             {option === "yes" ? "Yes" : "No"}
