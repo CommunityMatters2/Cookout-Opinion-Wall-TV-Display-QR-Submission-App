@@ -10,9 +10,7 @@ type MultiQuestion = {
   type: "multi";
   key: "desiredPrograms" | "prioritySpaces" | "likelyUsers" | "bestTimes";
   question: string;
-  helper?: string;
   options: string[];
-  maxChoices?: number;
   otherKey?: "desiredProgramsOther" | "prioritySpacesOther";
 };
 
@@ -36,8 +34,6 @@ export const surveyQuestions: SurveyQuestion[] = [
     key: "desiredPrograms",
     question:
       "What programs or services would you most like to see offered at the new community center?",
-    helper: "Pick up to 3",
-    maxChoices: 3,
     otherKey: "desiredProgramsOther",
     options: [
       "Youth programs",
@@ -57,7 +53,6 @@ export const surveyQuestions: SurveyQuestion[] = [
     type: "multi",
     key: "prioritySpaces",
     question: "What spaces or features should be prioritized in the community center?",
-    helper: "Pick as many as you like",
     otherKey: "prioritySpacesOther",
     options: [
       "Gymnasium",
@@ -77,7 +72,6 @@ export const surveyQuestions: SurveyQuestion[] = [
     type: "multi",
     key: "likelyUsers",
     question: "Who in your household or community would most likely use the center?",
-    helper: "Pick as many as you like",
     options: [
       "Children",
       "Teenagers",
@@ -92,7 +86,6 @@ export const surveyQuestions: SurveyQuestion[] = [
     type: "multi",
     key: "bestTimes",
     question: "What days and times would make it easiest for you or your family to participate?",
-    helper: "Pick as many as you like",
     options: [
       "Weekday mornings",
       "Weekday afternoons",

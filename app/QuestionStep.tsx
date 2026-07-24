@@ -9,14 +9,15 @@ export default function QuestionStep({
   question,
   answers,
   onSetYesNo,
-  onToggleMulti,
+  onSelectOption,
   onSetOtherText,
   onSetText,
+  onAdvance,
 }: {
   question: SurveyQuestion;
   answers: SurveyAnswers;
   onSetYesNo: (key: "visitedBefore" | "cityNeedsCenter", value: "yes" | "no") => void;
-  onToggleMulti: (
+  onSelectOption: (
     key: "desiredPrograms" | "prioritySpaces" | "likelyUsers" | "bestTimes",
     option: string
   ) => void;
@@ -25,6 +26,7 @@ export default function QuestionStep({
     value: string
   ) => void;
   onSetText: (key: "trustAnswer", value: string) => void;
+  onAdvance: () => void;
 }) {
   if (question.type === "yesno") {
     const value = answers[question.key];
@@ -35,7 +37,10 @@ export default function QuestionStep({
             key={option}
             type="button"
             className={`${styles.yesNoButton} ${value === option ? styles.yesNoButtonSelected : ""}`}
-            onClick={() => onSetYesNo(question.key, option)}
+            onClick={() => {
+              onSetYesNo(question.key, option);
+              onAdvance();
+            }}
             whileTap={{ scale: 0.95 }}
           >
             {option === "yes" ? "Yes" : "No"}
@@ -59,23 +64,32 @@ export default function QuestionStep({
   }
 
   const selected = answers[question.key];
-  const showOther = question.otherKey && selected.includes("Other");
-  const atMax = Boolean(question.maxChoices) && selected.length >= (question.maxChoices ?? Infinity);
+  const otherKey = question.otherKey;
+  const showOther = otherKey && selected.includes("Other");
+
+  function handleOtherKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+    if (otherKey && answers[otherKey].trim().length > 0) {
+      onAdvance();
+    }
+  }
 
   return (
     <div>
       <div className={styles.chipGrid}>
         {question.options.map((option) => {
           const isSelected = selected.includes(option);
-          const disabled = atMax && !isSelected;
           return (
             <motion.button
               key={option}
               type="button"
-              disabled={disabled}
               className={`${styles.chip} ${isSelected ? styles.chipSelected : ""}`}
-              onClick={() => onToggleMulti(question.key, option)}
-              whileTap={disabled ? undefined : { scale: 0.94 }}
+              onClick={() => {
+                onSelectOption(question.key, option);
+                if (option !== "Other") onAdvance();
+              }}
+              whileTap={{ scale: 0.94 }}
             >
               {option}
             </motion.button>
@@ -83,21 +97,27 @@ export default function QuestionStep({
         })}
       </div>
       {showOther && question.otherKey && (
-        <input
-          type="text"
-          className={styles.input}
-          style={{ marginTop: 14 }}
-          placeholder="Tell us more…"
-          maxLength={80}
-          value={answers[question.otherKey]}
-          onChange={(e) => onSetOtherText(question.otherKey!, e.target.value)}
-          autoFocus
-        />
-      )}
-      {question.maxChoices && (
-        <p className={styles.chipCounter}>
-          {selected.length}/{question.maxChoices} selected
-        </p>
+        <div className={styles.otherRow}>
+          <input
+            type="text"
+            className={styles.input}
+            placeholder="Tell us more…"
+            maxLength={80}
+            value={answers[question.otherKey]}
+            onChange={(e) => onSetOtherText(question.otherKey!, e.target.value)}
+            onKeyDown={handleOtherKeyDown}
+            autoFocus
+          />
+          <motion.button
+            type="button"
+            className={styles.otherContinueButton}
+            onClick={() => onAdvance()}
+            disabled={!answers[question.otherKey].trim()}
+            whileTap={{ scale: 0.96 }}
+          >
+            Continue
+          </motion.button>
+        </div>
       )}
     </div>
   );

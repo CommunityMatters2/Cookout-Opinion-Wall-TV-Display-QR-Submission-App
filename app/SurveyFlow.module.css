@@ -120,13 +120,6 @@
   margin-bottom: 28px;
 }
 
-.mission {
-  font-style: italic;
-  font-size: 1rem;
-  opacity: 0.75;
-  margin: 4px 0 20px;
-}
-
 .form {
   display: flex;
   flex-direction: column;
@@ -290,22 +283,36 @@
   transition: all 0.15s;
 }
 
-.chip:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
 .chipSelected {
   border-color: var(--color-accent);
   background: var(--gradient-sunset);
   color: #fff;
 }
 
-.chipCounter {
-  margin-top: 10px;
-  font-size: 0.8rem;
-  opacity: 0.5;
-  text-align: right;
+.otherRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.otherRow .input {
+  flex: 1;
+}
+
+.otherContinueButton {
+  padding: 0 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--gradient-sunset);
+  border: none;
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+}
+
+.otherContinueButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .navRow {
@@ -322,42 +329,6 @@
 .navRow .submitButton {
   flex: 2;
   margin-top: 0;
-}
-
-/* Thanks / social */
-
-.thanksLogo {
-  border-radius: 50%;
-  margin: 0 auto 16px;
-  display: block;
-}
-
-.socialRow {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-}
-
-.socialButton {
-  padding: 10px 18px;
-  border-radius: var(--radius-pill);
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: #fff;
-}
-
-.socialButton:nth-child(1) {
-  background: #1877f2;
-}
-
-.socialButton:nth-child(2) {
-  background: #c13584;
-}
-
-.socialButton:nth-child(3) {
-  background: #111;
 }
 
 

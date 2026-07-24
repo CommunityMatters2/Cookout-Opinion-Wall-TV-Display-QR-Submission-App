@@ -12,9 +12,18 @@ import { emptySurveyAnswers, type SurveyAnswers } from "@/types/survey";
 import QuestionStep from "@/app/QuestionStep";
 import styles from "./SurveyFlow.module.css";
 
-type Stage = "intro" | "question" | "thanks" | "message" | "done" | "pending-review";
+type Stage = "intro" | "question" | "done" | "pending-review";
+
+// One extra step beyond the survey questions: name + opinion is asked as the
+// final "question" in the same flow rather than a separate screen, so the
+// whole thing reads as one continuous, fast sequence.
+const TOTAL_STEPS = surveyQuestions.length + 1;
 
 const DRAFT_KEY = "cm2_message_draft";
+
+// Brief pause after a tap so the selected state is visible before the next
+// question slides in — auto-advance shouldn't feel like the screen jumped.
+const AUTO_ADVANCE_DELAY_MS = 300;
 
 const fadeSlide = {
   initial: { opacity: 0, y: 16 },
@@ -114,25 +123,23 @@ export default function SurveyFlow() {
     return () => clearTimeout(id);
   }, [stage, postedMessageId, router]);
 
-  const currentQuestion = surveyQuestions[questionIndex];
+  const isContactStep = questionIndex === surveyQuestions.length;
+  const currentQuestion = isContactStep ? undefined : surveyQuestions[questionIndex];
   const currentAnswered = currentQuestion ? isQuestionAnswered(currentQuestion, answers) : false;
-  const progressPercent = Math.round(((questionIndex + 1) / surveyQuestions.length) * 100);
+  const progressPercent = Math.round(((questionIndex + 1) / TOTAL_STEPS) * 100);
 
   function setYesNo(key: "visitedBefore" | "cityNeedsCenter", value: "yes" | "no") {
     setAnswers((prev) => ({ ...prev, [key]: value }));
   }
 
-  function toggleMulti(
+  // Each tap replaces the whole selection (rather than toggling it into a
+  // list) since a single tap now immediately advances to the next question —
+  // there's no later moment to pick a second option.
+  function selectOption(
     key: "desiredPrograms" | "prioritySpaces" | "likelyUsers" | "bestTimes",
     option: string
   ) {
-    setAnswers((prev) => {
-      const current = prev[key];
-      const next = current.includes(option)
-        ? current.filter((o) => o !== option)
-        : [...current, option];
-      return { ...prev, [key]: next };
-    });
+    setAnswers((prev) => ({ ...prev, [key]: [option] }));
   }
 
   function setOtherText(key: "desiredProgramsOther" | "prioritySpacesOther", value: string) {
@@ -148,15 +155,22 @@ export default function SurveyFlow() {
       setQuestionIndex((i) => i + 1);
       return;
     }
+    // Leaving the last real question — save the survey answers now so
+    // they're recorded even if the guest abandons before posting a message,
+    // then move into the name/opinion step.
     setSurveyError(undefined);
     startSurveyTransition(async () => {
       const result = await submitSurvey(answers);
       if (result.ok) {
-        setStage("thanks");
+        setQuestionIndex((i) => i + 1);
       } else {
         setSurveyError(result.error);
       }
     });
+  }
+
+  function advanceAfterSelect() {
+    setTimeout(goNext, AUTO_ADVANCE_DELAY_MS);
   }
 
   function goBack() {
@@ -195,12 +209,12 @@ export default function SurveyFlow() {
               >
                 Let&rsquo;s go 🎙️
               </motion.button>
-              <p className={styles.introFootnote}>Takes about a minute · {surveyQuestions.length} quick questions</p>
+              <p className={styles.introFootnote}>Takes about a minute · {TOTAL_STEPS} quick questions</p>
             </div>
           </motion.div>
         )}
 
-        {stage === "question" && currentQuestion && (
+        {stage === "question" && (
           <motion.div key="question" className={styles.card} {...fadeSlide}>
             <div className={styles.progressTrack}>
               <motion.div
@@ -210,143 +224,120 @@ export default function SurveyFlow() {
               />
             </div>
             <p className={styles.progressLabel}>
-              Question {questionIndex + 1} of {surveyQuestions.length}
+              Question {questionIndex + 1} of {TOTAL_STEPS}
             </p>
 
             <AnimatePresence mode="wait">
-              <motion.div
-                key={questionIndex}
-                initial={{ opacity: 0, x: 24 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -24 }}
-                transition={{ type: "spring", stiffness: 300, damping: 28 }}
-              >
-                <h1 className={styles.question}>{currentQuestion.question}</h1>
-                {currentQuestion.type === "multi" && currentQuestion.helper && (
-                  <p className={styles.helper}>{currentQuestion.helper}</p>
-                )}
+              {!isContactStep && currentQuestion ? (
+                <motion.div
+                  key={questionIndex}
+                  initial={{ opacity: 0, x: 24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -24 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 28 }}
+                >
+                  <h1 className={styles.question}>{currentQuestion.question}</h1>
 
-                <QuestionStep
-                  question={currentQuestion}
-                  answers={answers}
-                  onSetYesNo={setYesNo}
-                  onToggleMulti={toggleMulti}
-                  onSetOtherText={setOtherText}
-                  onSetText={setText}
-                />
-              </motion.div>
+                  <QuestionStep
+                    question={currentQuestion}
+                    answers={answers}
+                    onSetYesNo={setYesNo}
+                    onSelectOption={selectOption}
+                    onSetOtherText={setOtherText}
+                    onSetText={setText}
+                    onAdvance={advanceAfterSelect}
+                  />
+
+                  {surveyError && <p className={styles.error}>{surveyError}</p>}
+                  {isSubmittingSurvey && <p className={styles.helper}>Saving…</p>}
+
+                  <div className={styles.navRow}>
+                    <button
+                      type="button"
+                      className={styles.backButton}
+                      onClick={goBack}
+                      disabled={questionIndex === 0 || isSubmittingSurvey}
+                    >
+                      Back
+                    </button>
+                    {currentQuestion.type === "text" && (
+                      <motion.button
+                        type="button"
+                        className={styles.submitButton}
+                        onClick={goNext}
+                        disabled={!currentAnswered || isSubmittingSurvey}
+                        whileTap={currentAnswered ? { scale: 0.97 } : undefined}
+                      >
+                        Next
+                      </motion.button>
+                    )}
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="contact"
+                  initial={{ opacity: 0, x: 24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -24 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 28 }}
+                >
+                  <h1 className={styles.question}>{siteConfig.eventTitle}</h1>
+                  <p className={styles.helper}>{siteConfig.tagline}</p>
+
+                  <form ref={formRef} onSubmit={handleMessageSubmit} className={styles.form}>
+                    <div>
+                      <label className={styles.label} htmlFor="name">
+                        Your name
+                      </label>
+                      <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        className={styles.input}
+                        maxLength={siteConfig.maxNameLength}
+                        placeholder="Jordan"
+                        autoComplete="name"
+                        value={messageName}
+                        onChange={(e) => setMessageName(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className={styles.label} htmlFor="message">
+                        Your opinion
+                      </label>
+                      <textarea
+                        id="message"
+                        name="message"
+                        className={styles.textarea}
+                        maxLength={siteConfig.maxMessageLength}
+                        placeholder="What's on your mind?"
+                        value={messageText}
+                        onChange={(e) => setMessageText(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    {messageError && <p className={styles.error}>{messageError}</p>}
+
+                    <div className={styles.navRow}>
+                      <button type="button" className={styles.backButton} onClick={goBack}>
+                        Back
+                      </button>
+                      <motion.button
+                        type="submit"
+                        className={styles.submitButton}
+                        disabled={isMessagePending}
+                        whileTap={{ scale: 0.97 }}
+                      >
+                        {isMessagePending ? "Sending…" : "Post it"}
+                      </motion.button>
+                    </div>
+                  </form>
+                </motion.div>
+              )}
             </AnimatePresence>
-
-            {surveyError && <p className={styles.error}>{surveyError}</p>}
-
-            <div className={styles.navRow}>
-              <button
-                type="button"
-                className={styles.backButton}
-                onClick={goBack}
-                disabled={questionIndex === 0 || isSubmittingSurvey}
-              >
-                Back
-              </button>
-              <motion.button
-                type="button"
-                className={styles.submitButton}
-                onClick={goNext}
-                disabled={!currentAnswered || isSubmittingSurvey}
-                whileTap={currentAnswered ? { scale: 0.97 } : undefined}
-              >
-                {isSubmittingSurvey
-                  ? "Saving…"
-                  : questionIndex < surveyQuestions.length - 1
-                    ? "Next"
-                    : "Finish survey"}
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
-
-        {stage === "thanks" && (
-          <motion.div key="thanks" className={styles.card} {...fadeSlide}>
-            <Image src={cm2.logo} alt={cm2.orgName} width={88} height={88} className={styles.thanksLogo} />
-            <h1 className={styles.title}>Thank you! 🙌</h1>
-            <p className={styles.introText}>
-              Your voice just helped shape Poughkeepsie&rsquo;s next community center.
-            </p>
-            <p className={styles.mission}>&ldquo;{cm2.mission}&rdquo;</p>
-            <p className={styles.helper}>Follow {cm2.orgName} to stay in the loop:</p>
-            <div className={styles.socialRow}>
-              <a href={cm2.social.facebook} target="_blank" rel="noopener noreferrer" className={styles.socialButton}>
-                Facebook
-              </a>
-              <a href={cm2.social.instagram} target="_blank" rel="noopener noreferrer" className={styles.socialButton}>
-                Instagram
-              </a>
-              <a href={cm2.social.tiktok} target="_blank" rel="noopener noreferrer" className={styles.socialButton}>
-                TikTok
-              </a>
-            </div>
-            <motion.button
-              type="button"
-              className={styles.submitButton}
-              onClick={() => setStage("message")}
-              whileTap={{ scale: 0.97 }}
-            >
-              Now, share your cookout opinion →
-            </motion.button>
-          </motion.div>
-        )}
-
-        {stage === "message" && (
-          <motion.div key="message" className={styles.card} {...fadeSlide}>
-            <h1 className={styles.title}>{siteConfig.eventTitle}</h1>
-            <p className={styles.tagline}>{siteConfig.tagline}</p>
-
-            <form ref={formRef} onSubmit={handleMessageSubmit} className={styles.form}>
-              <div>
-                <label className={styles.label} htmlFor="name">
-                  Your name
-                </label>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  className={styles.input}
-                  maxLength={siteConfig.maxNameLength}
-                  placeholder="Jordan"
-                  autoComplete="name"
-                  value={messageName}
-                  onChange={(e) => setMessageName(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div>
-                <label className={styles.label} htmlFor="message">
-                  Your message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  className={styles.textarea}
-                  maxLength={siteConfig.maxMessageLength}
-                  placeholder="What's on your mind?"
-                  value={messageText}
-                  onChange={(e) => setMessageText(e.target.value)}
-                  required
-                />
-              </div>
-
-              {messageError && <p className={styles.error}>{messageError}</p>}
-
-              <motion.button
-                type="submit"
-                className={styles.submitButton}
-                disabled={isMessagePending}
-                whileTap={{ scale: 0.97 }}
-              >
-                {isMessagePending ? "Sending…" : "Post it"}
-              </motion.button>
-            </form>
           </motion.div>
         )}
 
@@ -377,6 +368,8 @@ export default function SurveyFlow() {
               onClick={() => {
                 setMessageName("");
                 setMessageText("");
+                setQuestionIndex(0);
+                setAnswers(emptySurveyAnswers);
                 setStage("intro");
               }}
             >
